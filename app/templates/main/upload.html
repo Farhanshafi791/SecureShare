@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block title %}Upload File - SecureShare{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="text-center">
+                <h1 class="display-5 fw-bold text-gradient-primary mb-3">Upload Your Files</h1>
+                <p class="lead text-muted mb-4">
+                    Securely upload and encrypt your files with military-grade AES-256 encryption
+                </p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item">
+                            <a href="{{ url_for('main.home') }}" class="text-decoration-none">
+                                <i class="fas fa-home me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{{ url_for('main.dashboard') }}" class="text-decoration-none">
+                                <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <i class="fas fa-upload me-1"></i>Upload
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Upload Form Card -->
+            <div class="card border-0 shadow-lg fade-in">
+                <div class="card-header bg-gradient-primary text-white text-center border-0">
+                    <div class="py-3">
+                        <h4 class="mb-0 fw-semibold">
+                            <i class="fas fa-cloud-upload-alt me-2"></i>Secure File Upload
+                        </h4>
+                        <p class="mb-0 opacity-90">Drag and drop or click to select files</p>
+                    </div>
+                </div>
+                <div class="card-body p-5">
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} border-0 mb-4">
+                                    <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' }} me-2"></i>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" enctype="multipart/form-data" id="uploadForm" class="needs-validation" novalidate>
+                        <!-- File Upload Area -->
+                        <div class="file-upload-area mb-4" onclick="document.getElementById('file').click()">
+                            <div class="text-center py-5">
+                                <i class="fas fa-cloud-upload-alt text-primary mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="fw-semibold mb-3">Choose Files or Drag & Drop</h5>
+                                <p class="text-muted mb-3">
+                                    Select multiple files to upload and encrypt securely
+                                </p>
+                                <button type="button" class="btn btn-outline-primary">
+                                    <i class="fas fa-folder-open me-2"></i>Browse Files
+                                </button>
+                            </div>
+                            <input type="file" 
+                                   name="file" 
+                                   id="file" 
+                                   multiple
+                                   required 
+                                   accept=".txt,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.bmp,.webp,.svg,.mp3,.wav,.flac,.ogg,.aac,.m4a,.wma,.aiff,.au,.zip,.rar,.7z,.tar,.gz"
+                                   class="d-none">
+                            <div class="invalid-feedback">
+                                Please select at least one file to upload.
+                            </div>
+                        </div>
+
+                        <!-- Selected Files List -->
+                        <div class="file-list mb-4" style="display: none;">
+                            <h6 class="fw-semibold mb-3">
+                                <i class="fas fa-list me-2"></i>Selected Files
+                            </h6>
+                        </div>
+
+                        <!-- Upload Options -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="description" class="form-label fw-medium">
+                                    <i class="fas fa-comment me-2 text-primary"></i>Description (Optional)
+                                </label>
+                                <textarea class="form-control" id="description" name="description" 
+                                         rows="3" placeholder="Add a description for your files..."></textarea>
+                                <div class="form-text">Help others understand what these files contain</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tags" class="form-label fw-medium">
+                                    <i class="fas fa-tags me-2 text-primary"></i>Tags (Optional)
+                                </label>
+                                <input type="text" class="form-control" id="tags" name="tags" 
+                                       placeholder="work, documents, images..." >
+                                <div class="form-text">Separate tags with commas</div>
+                                
+                                <!-- Privacy Settings -->
+                                <div class="mt-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="private" name="private" checked>
+                                        <label class="form-check-label fw-medium" for="private">
+                                            <i class="fas fa-lock me-2 text-success"></i>Private Upload
+                                        </label>
+                                        <div class="form-text">Only you can access these files</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upload Progress -->
+                        <div class="upload-progress mb-4" style="display: none;">
+                            <h6 class="fw-semibold mb-3">
+                                <i class="fas fa-progress-bar me-2"></i>Upload Progress
+                            </h6>
+                            <div class="progress mb-2">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" style="width: 0%" id="uploadProgressBar">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted" id="uploadStatus">Preparing upload...</small>
+                                <small class="text-muted" id="uploadPercent">0%</small>
+                            </div>
+                        </div>
+
+                        <!-- Upload Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg" id="uploadButton">
+                                <i class="fas fa-shield-alt me-2"></i>Encrypt & Upload Files
+                                <span class="loading-spinner d-none"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Security Information -->
+            <div class="row mt-5">
+                <div class="col-md-4 text-center mb-3">
+                    <div class="feature-icon mx-auto mb-3" style="width: 50px; height: 50px;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h6 class="fw-semibold">AES-256 Encryption</h6>
+                    <small class="text-muted">Military-grade security for your files</small>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                    <div class="feature-icon mx-auto mb-3" style="width: 50px; height: 50px;">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h6 class="fw-semibold">Secure Storage</h6>
+                    <small class="text-muted">Files are encrypted before storage</small>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                    <div class="feature-icon mx-auto mb-3" style="width: 50px; height: 50px;">
+                        <i class="fas fa-user-lock"></i>
+                    </div>
+                    <h6 class="fw-semibold">Privacy Protected</h6>
+                    <small class="text-muted">Only you have access to your files</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('file');
+    const uploadForm = document.getElementById('uploadForm');
+    const uploadButton = document.getElementById('uploadButton');
+    const fileList = document.querySelector('.file-list');
+    const uploadProgress = document.querySelector('.upload-progress');
+    const progressBar = document.getElementById('uploadProgressBar');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const uploadPercent = document.getElementById('uploadPercent');
+
+    // File input change handler
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            updateFileList(this.files);
+            fileList.style.display = 'block';
+        } else {
+            fileList.style.display = 'none';
+        }
+    });
+
+    // Update file list display
+    function updateFileList(files) {
+        let html = '';
+        let totalSize = 0;
+        
+        Array.from(files).forEach((file, index) => {
+            totalSize += file.size;
+            html += `
+                <div class="file-item d-flex align-items-center justify-content-between p-3 border rounded mb-2">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-file text-primary me-3 fs-5"></i>
+                        <div>
+                            <div class="fw-medium">${file.name}</div>
+                            <small class="text-muted">${SecureShare.formatFileSize(file.size)}</small>
+                        </div>
+                    </div>
+                    <div class="badge bg-primary">
+                        <i class="fas fa-lock me-1"></i>Encrypted
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `
+            <div class="mt-3 p-3 bg-light rounded">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-medium">Total: ${files.length} files</span>
+                    <span class="text-muted">${SecureShare.formatFileSize(totalSize)}</span>
+                </div>
+            </div>
+        `;
+        
+        fileList.innerHTML = '<h6 class="fw-semibold mb-3"><i class="fas fa-list me-2"></i>Selected Files</h6>' + html;
+    }
+
+    // Form submission with progress
+    uploadForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (!fileInput.files.length) {
+            SecureShare.showToast('Please select at least one file to upload.', 'warning');
+            return;
+        }
+
+        // Show progress
+        uploadProgress.style.display = 'block';
+        SecureShare.showButtonLoading(uploadButton);
+        
+        // Simulate upload progress (in real implementation, this would be actual progress)
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 10;
+            if (progress > 90) progress = 90;
+            
+            progressBar.style.width = progress + '%';
+            uploadPercent.textContent = Math.round(progress) + '%';
+            
+            if (progress < 30) {
+                uploadStatus.textContent = 'Encrypting files...';
+            } else if (progress < 70) {
+                uploadStatus.textContent = 'Uploading to secure server...';
+            } else {
+                uploadStatus.textContent = 'Finalizing upload...';
+            }
+        }, 200);
+        
+        // Submit form (this would be handled by the actual form submission)
+        setTimeout(() => {
+            clearInterval(progressInterval);
+            progressBar.style.width = '100%';
+            uploadPercent.textContent = '100%';
+            uploadStatus.textContent = 'Upload complete!';
+            
+            // Submit the actual form
+            this.submit();
+        }, 3000);
+    });
+
+    // Form validation
+    (function() {
+        'use strict';
+        uploadForm.addEventListener('submit', function(event) {
+            if (uploadForm.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            uploadForm.classList.add('was-validated');
+        }, false);
+    })();
+});
+</script>
+{% endblock %}

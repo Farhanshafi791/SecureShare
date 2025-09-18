@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}User Management - SecureShare Admin{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb">
+    <a href="{{ url_for('main.home') }}">Home</a> / 
+    <a href="{{ url_for('admin.dashboard') }}">Admin Dashboard</a> / 
+    User Management
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="back-button">
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+</div>
+
+<h1>👥 User Management</h1>
+
+{% if users %}
+<div style="background-color: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+        <div><strong>Total Users:</strong> {{ users|length }}</div>
+        <div><strong>Admins:</strong> {{ users|selectattr("role", "equalto", "admin")|list|length }}</div>
+        <div><strong>Regular Users:</strong> {{ users|selectattr("role", "equalto", "user")|list|length }}</div>
+    </div>
+</div>
+
+<div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+            <tr style="background-color: #f8f9fa;">
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">ID</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Username</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Email</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Role</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Created</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr style="border-bottom: 1px solid #ddd;" onmouseover="this.style.backgroundColor='#f5f5f5'" onmouseout="this.style.backgroundColor='white'">
+                <td style="padding: 12px;">{{ user.id }}</td>
+                <td style="padding: 12px;">{{ user.username }}</td>
+                <td style="padding: 12px;">{{ user.email }}</td>
+                <td style="padding: 12px;">
+                    {% if user.role == 'admin' %}
+                        <span style="background-color: #dc3545; color: white; padding: 3px 8px; border-radius: 3px; font-size: 0.8em;">Admin</span>
+                    {% else %}
+                        <span style="background-color: #28a745; color: white; padding: 3px 8px; border-radius: 3px; font-size: 0.8em;">User</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 12px;">
+                    {% if user.created_at %}
+                        {{ user.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td style="padding: 12px;">
+                    <a href="{{ url_for('admin.view_user', user_id=user.id) }}" class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.8em; margin-right: 5px;">View</a>
+                    {% if user.id != current_user.id %}
+                        <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete user {{ user.username }}?')">
+                            <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8em;">Delete</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div style="text-align: center; color: #666; font-style: italic; padding: 40px;">
+    <h3>No users found in the database</h3>
+    <p>Users will appear here after they register through the registration page.</p>
+    <a href="{{ url_for('auth.register') }}" class="btn">Register a new user</a>
+</div>
+{% endif %}
+
+<div style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
+    <a href="{{ url_for('auth.register') }}" class="btn btn-secondary">Add New User</a>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+{% endblock %}

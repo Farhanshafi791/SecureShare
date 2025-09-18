@@ -1,0 +1,21 @@
+Dear {{ user.username }},
+
+Welcome to SecureShare! 🎉
+
+Your email has been successfully verified and your account is now active.
+
+You can now enjoy all the features of SecureShare:
+- Upload and encrypt your files securely
+- Share files with secure, time-limited links
+- Manage your file sharing permissions
+- Track who accesses your files
+
+Get started by logging in at: {{ url_for('auth.login', _external=True) }}
+
+Thank you for choosing SecureShare for your secure file sharing needs!
+
+Best regards,
+The SecureShare Team
+
+---
+This is an automated message, please do not reply to this email.

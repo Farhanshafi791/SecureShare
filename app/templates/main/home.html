@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}SecureShare - Secure File Sharing{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Hero Section -->
+    <div class="hero-section text-center fade-in">
+        <div class="position-relative">
+            <h1 class="display-3 fw-bold text-gradient-primary mb-4">
+                Welcome to SecureShare
+            </h1>
+            <p class="lead text-secondary mb-4 fs-5">
+                Enterprise-grade secure file sharing platform with military-level encryption. 
+                Your privacy and security are our top priorities.
+            </p>
+            <p class="text-muted mb-5 fs-6">
+                Upload, encrypt, and share your files with confidence using AES-256 encryption.
+            </p>
+            
+            {% if not current_user.is_authenticated %}
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg px-5">
+                    <i class="fas fa-sign-in-alt me-2"></i>Get Started
+                </a>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary btn-lg px-5">
+                    <i class="fas fa-user-plus me-2"></i>Create Account
+                </a>
+            </div>
+            {% else %}
+            <div class="alert alert-success glass-effect border-0 d-inline-block">
+                <h5 class="alert-heading mb-2">
+                    <i class="fas fa-user-check me-2"></i>Welcome back, {{ current_user.username }}!
+                </h5>
+                <p class="mb-3">Ready to manage your secure files?</p>
+                <div class="d-flex gap-2 justify-content-center flex-wrap">
+                    <a href="{{ url_for('main.upload_file') if 'main.upload_file' in url_for.__dict__ else '#' }}" 
+                       class="btn btn-success">
+                        <i class="fas fa-upload me-2"></i>Upload Files
+                    </a>
+                    <a href="{{ url_for('main.files') if 'main.files' in url_for.__dict__ else '#' }}" 
+                       class="btn btn-outline-success">
+                        <i class="fas fa-folder me-2"></i>My Files
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card text-center">
+                <div class="feature-icon mx-auto">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4 class="fw-semibold mb-3">Military-Grade Security</h4>
+                <p class="text-muted">
+                    AES-256 encryption ensures your files are protected with the same security 
+                    standards used by government and military organizations.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card text-center">
+                <div class="feature-icon mx-auto">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <h4 class="fw-semibold mb-3">Secure Sharing</h4>
+                <p class="text-muted">
+                    Generate time-limited, password-protected sharing links with granular 
+                    access controls for maximum security.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card text-center">
+                <div class="feature-icon mx-auto">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h4 class="fw-semibold mb-3">Cloud Storage</h4>
+                <p class="text-muted">
+                    Access your encrypted files from anywhere while maintaining complete 
+                    privacy and security across all devices.
+                </p>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="mt-5">
+        <h2 class="text-center mb-5">Why Choose SecureShare?</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="fs-1 text-primary mb-3">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h5 class="card-title">AES-256 Encryption</h5>
+                        <p class="card-text text-muted">Military-grade encryption protects your files with unbreakable security.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="fs-1 text-success mb-3">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <h5 class="card-title">Secure Sharing</h5>
+                        <p class="card-text text-muted">Generate cryptographic share links for safe file distribution.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="fs-1 text-warning mb-3">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h5 class="card-title">Access Control</h5>
+                        <p class="card-text text-muted">Advanced authentication with role-based permissions and session management.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="fs-1 text-info mb-3">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h5 class="card-title">Activity Monitoring</h5>
+                        <p class="card-text text-muted">Comprehensive logging and audit trails for all file operations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Features -->
+    <div class="mt-5 py-5 bg-light rounded">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h3 class="fw-bold mb-4">Enterprise-Grade Security</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Email verification for all accounts</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Password complexity requirements</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Session timeout protection</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Anonymous file downloads</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Complete access logging</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <i class="fas fa-lock display-1 text-primary opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+Dear {{ user.username }},
+
+Welcome to SecureShare! Please verify your email address by clicking the link below:
+
+{{ verification_url }}
+
+If you didn't create an account with SecureShare, please ignore this email.
+
+This verification link will expire in 24 hours for security reasons.
+
+Best regards,
+The SecureShare Team
+
+---
+This is an automated message, please do not reply to this email.

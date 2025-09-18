@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Help Center{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="fas fa-question-circle me-2"></i>Help Center</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-upload text-primary me-2"></i>Getting Started</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <strong>1. Create Account:</strong> Register and verify your email
+                                </li>
+                                <li class="mb-2">
+                                    <strong>2. Upload Files:</strong> Click "Upload File" to add files
+                                </li>
+                                <li class="mb-2">
+                                    <strong>3. Share Files:</strong> Generate secure links to share
+                                </li>
+                                <li class="mb-2">
+                                    <strong>4. Manage Files:</strong> View, download, or delete files
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-shield-alt text-success me-2"></i>Security Features</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <strong>AES-256 Encryption:</strong> All files are encrypted
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Secure Sharing:</strong> Unique, cryptographic share links
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Access Logging:</strong> Track all file operations
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Email Verification:</strong> Verified accounts only
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5><i class="fas fa-file text-warning me-2"></i>File Management</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6>Supported File Types</h6>
+                            <p class="small text-muted">
+                                Documents: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX<br>
+                                Images: PNG, JPG, JPEG, GIF<br>
+                                Archives: ZIP, RAR, 7Z<br>
+                                Text: TXT
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>File Size Limit</h6>
+                            <p class="small text-muted">
+                                Maximum file size: 16MB<br>
+                                For larger files, please contact support.
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>Storage</h6>
+                            <p class="small text-muted">
+                                All files are encrypted with AES-256<br>
+                                Secure cloud storage<br>
+                                Regular backups
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5><i class="fas fa-share text-info me-2"></i>Sharing Files</h5>
+                    <div class="alert alert-info border-start border-5 border-info">
+                        <strong><i class="fas fa-info-circle me-2"></i>How to share files:</strong>
+                        <ol class="mb-0 mt-2">
+                            <li>Go to "My Files" page</li>
+                            <li>Click the <span class="badge bg-primary">🌐</span> button to generate a share link</li>
+                            <li>Click the <span class="badge bg-info">🔗</span> button to copy the link</li>
+                            <li>Share the link with anyone - no account required to download</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,554 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - SecureShare{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Welcome Header -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="hero-section dashboard-hero text-center py-5">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="user-avatar-large mx-auto mb-4">
+                                <div class="avatar-status online"></div>
+                            </div>
+                            <h1 class="display-5 fw-bold text-gradient-primary mb-3">
+                                Welcome back, {{ current_user.username }}!
+                            </h1>
+                            <p class="lead text-muted mb-4">
+                                Manage your secure files and monitor your account activity
+                            </p>
+                            <div class="badge bg-success fs-6 mb-3">
+                                <i class="fas fa-shield-alt me-2"></i>Account Secured
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-5">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100 stat-card-modern">
+                <div class="card-body p-4 position-relative overflow-hidden">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="stat-icon-bg bg-primary bg-opacity-10 mb-3">
+                                <i class="fas fa-file-alt text-primary fs-4"></i>
+                            </div>
+                            <h3 class="fw-bold mb-1 counter" data-target="{{ total_files }}">{{ total_files }}</h3>
+                            <p class="text-muted mb-0 small">Total Files</p>
+                        </div>
+                        <div class="stat-trend text-success">
+                            <i class="fas fa-arrow-up me-1"></i>
+                            <small>+12%</small>
+                        </div>
+                    </div>
+                    <div class="stat-bg-pattern"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100 stat-card-modern">
+                <div class="card-body p-4 position-relative overflow-hidden">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="stat-icon-bg bg-success bg-opacity-10 mb-3">
+                                <i class="fas fa-download text-success fs-4"></i>
+                            </div>
+                            <h3 class="fw-bold mb-1 counter" data-target="{{ total_downloads if total_downloads else 0 }}">{{ total_downloads if total_downloads else 0 }}</h3>
+                            <p class="text-muted mb-0 small">Total Downloads</p>
+                        </div>
+                        <div class="stat-trend text-success">
+                            <i class="fas fa-arrow-up me-1"></i>
+                            <small>+8%</small>
+                        </div>
+                    </div>
+                    <div class="stat-bg-pattern"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100 stat-card-modern">
+                <div class="card-body p-4 position-relative overflow-hidden">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="stat-icon-bg bg-warning bg-opacity-10 mb-3">
+                                <i class="fas fa-link text-warning fs-4"></i>
+                            </div>
+                            <h3 class="fw-bold mb-1 counter" data-target="{{ active_shares if active_shares else 0 }}">{{ active_shares if active_shares else 0 }}</h3>
+                            <p class="text-muted mb-0 small">Active Shares</p>
+                        </div>
+                        <div class="stat-trend text-warning">
+                            <i class="fas fa-minus me-1"></i>
+                            <small>0%</small>
+                        </div>
+                    </div>
+                    <div class="stat-bg-pattern"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100 stat-card-modern">
+                <div class="card-body p-4 position-relative overflow-hidden">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="stat-icon-bg bg-info bg-opacity-10 mb-3">
+                                <i class="fas fa-hdd text-info fs-4"></i>
+                            </div>
+                            <h3 class="fw-bold mb-1">{{ "%.1f"|format(total_size_mb if total_size_mb else 0) }}</h3>
+                            <p class="text-muted mb-0 small">Storage Used (MB)</p>
+                        </div>
+                        <div class="stat-trend text-info">
+                            <i class="fas fa-arrow-up me-1"></i>
+                            <small>+5%</small>
+                        </div>
+                    </div>
+                    <div class="stat-bg-pattern"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-gradient-primary text-white border-0">
+                    <div class="py-2">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="fas fa-rocket me-2"></i>Quick Actions
+                        </h5>
+                        <p class="mb-0 opacity-90 small">Get started with common tasks</p>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-lg-3 col-md-6">
+                            <a href="{{ url_for('main.upload_file') }}" class="action-card-modern text-decoration-none">
+                                <div class="card border-0 h-100 shadow-sm action-hover">
+                                    <div class="card-body text-center p-4">
+                                        <div class="action-icon-modern bg-primary bg-opacity-10 mx-auto mb-3">
+                                            <i class="fas fa-cloud-upload-alt text-primary fs-3"></i>
+                                        </div>
+                                        <h6 class="fw-semibold mb-2">Upload Files</h6>
+                                        <p class="text-muted small mb-0">Securely upload and encrypt your files</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <div class="col-lg-3 col-md-6">
+                            <a href="{{ url_for('main.files') }}" class="action-card-modern text-decoration-none">
+                                <div class="card border-0 h-100 shadow-sm action-hover">
+                                    <div class="card-body text-center p-4">
+                                        <div class="action-icon-modern bg-success bg-opacity-10 mx-auto mb-3">
+                                            <i class="fas fa-folder-open text-success fs-3"></i>
+                                        </div>
+                                        <h6 class="fw-semibold mb-2">My Files</h6>
+                                        <p class="text-muted small mb-0">Browse and manage your uploads</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <div class="col-lg-3 col-md-6">
+                            <a href="#" class="action-card-modern text-decoration-none" onclick="showCreateShare()">
+                                <div class="card border-0 h-100 shadow-sm action-hover">
+                                    <div class="card-body text-center p-4">
+                                        <div class="action-icon-modern bg-warning bg-opacity-10 mx-auto mb-3">
+                                            <i class="fas fa-share-alt text-warning fs-3"></i>
+                                        </div>
+                                        <h6 class="fw-semibold mb-2">Create Share</h6>
+                                        <p class="text-muted small mb-0">Generate secure sharing links</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <div class="col-lg-3 col-md-6">
+                            <a href="{{ url_for('support.help') }}" class="action-card-modern text-decoration-none">
+                                <div class="card border-0 h-100 shadow-sm action-hover">
+                                    <div class="card-body text-center p-4">
+                                        <div class="action-icon-modern bg-info bg-opacity-10 mx-auto mb-3">
+                                            <i class="fas fa-question-circle text-info fs-3"></i>
+                                        </div>
+                                        <h6 class="fw-semibold mb-2">Get Help</h6>
+                                        <p class="text-muted small mb-0">Support and documentation</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Recent Files & Activity Section -->
+    <div class="row">
+        <!-- Recent Files -->
+        <div class="col-lg-8 mb-4">
+            <div class="card border-0 shadow-lg h-100">
+                <div class="card-header bg-gradient-light border-0 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="fas fa-clock me-2 text-primary"></i>Recent Files
+                    </h5>
+                    <a href="{{ url_for('main.files') }}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-arrow-right me-1"></i>View All
+                    </a>
+                </div>
+                <div class="card-body p-4">
+                    {% if recent_files %}
+                        <div class="file-list-modern">
+                            {% for file in recent_files %}
+                            <div class="file-item-modern mb-3">
+                                <div class="d-flex align-items-center p-3 border rounded-lg bg-light">
+                                    <div class="file-icon-modern me-3">
+                                        {% if file.original_filename.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')) %}
+                                            <i class="fas fa-image text-success fs-4"></i>
+                                        {% elif file.original_filename.lower().endswith(('.pdf',)) %}
+                                            <i class="fas fa-file-pdf text-danger fs-4"></i>
+                                        {% elif file.original_filename.lower().endswith(('.doc', '.docx')) %}
+                                            <i class="fas fa-file-word text-primary fs-4"></i>
+                                        {% elif file.original_filename.lower().endswith(('.mp3', '.wav', '.flac', '.ogg', '.aac')) %}
+                                            <i class="fas fa-music text-info fs-4"></i>
+                                        {% elif file.original_filename.lower().endswith(('.zip', '.rar', '.7z')) %}
+                                            <i class="fas fa-file-archive text-warning fs-4"></i>
+                                        {% else %}
+                                            <i class="fas fa-file text-secondary fs-4"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1 fw-semibold">{{ file.original_filename[:30] }}{% if file.original_filename|length > 30 %}...{% endif %}</h6>
+                                        <div class="d-flex align-items-center text-muted small">
+                                            <span class="me-3">
+                                                <i class="fas fa-calendar me-1"></i>
+                                                {{ file.upload_time.strftime('%b %d, %Y') }}
+                                            </span>
+                                            <span class="badge bg-secondary">
+                                                {{ "%.1f KB"|format(file.file_size / 1024 if file.file_size else 0) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="file-actions-modern">
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" onclick="viewFile('{{ file.id }}')" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-success" onclick="shareFile('{{ file.id }}')" title="Share">
+                                                <i class="fas fa-share"></i>
+                                            </button>
+                                            <button class="btn btn-outline-info" onclick="downloadFile('{{ file.id }}')" title="Download">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state-modern text-center py-5">
+                            <div class="empty-icon-modern mb-4">
+                                <i class="fas fa-folder-open text-primary"></i>
+                            </div>
+                            <h6 class="fw-semibold text-muted mb-2">No files uploaded yet</h6>
+                            <p class="text-muted small mb-4">Upload your first file to get started with SecureShare!</p>
+                            <a href="{{ url_for('main.upload_file') }}" class="btn btn-primary">
+                                <i class="fas fa-cloud-upload-alt me-2"></i>Upload Your First File
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Account & Activity Sidebar -->
+        <div class="col-lg-4">
+            <!-- Account Information -->
+            <div class="card border-0 shadow-lg mb-4">
+                <div class="card-header bg-gradient-light border-0">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="fas fa-user-circle me-2 text-primary"></i>Account Information
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="account-info-modern">
+                        <div class="info-item-modern mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="info-icon-modern bg-primary bg-opacity-10 me-3">
+                                    <i class="fas fa-envelope text-primary"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-medium">Email Address</small>
+                                    <p class="mb-0 fw-semibold">{{ current_user.email }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item-modern mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="info-icon-modern bg-success bg-opacity-10 me-3">
+                                    <i class="fas fa-shield-alt text-success"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-medium">Account Role</small>
+                                    <p class="mb-0 fw-semibold">{{ current_user.role.title() if current_user.role else 'User' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item-modern mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="info-icon-modern bg-info bg-opacity-10 me-3">
+                                    <i class="fas fa-calendar text-info"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-medium">Member Since</small>
+                                    <p class="mb-0 fw-semibold">{{ current_user.created_at.strftime('%B %Y') if current_user.created_at else 'N/A' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item-modern mb-4">
+                            <div class="d-flex align-items-center">
+                                <div class="info-icon-modern bg-warning bg-opacity-10 me-3">
+                                    <i class="fas fa-check-circle text-warning"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-medium">Verification Status</small>
+                                    <p class="mb-0">
+                                        {% if current_user.email_verified %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i>Verified
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Unverified
+                                            </span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('main.profile') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-user-edit me-2"></i>Edit Profile
+                            </a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm" onclick="accountSettings()">
+                                <i class="fas fa-cog me-2"></i>Account Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-gradient-light border-0">
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="fas fa-history me-2 text-primary"></i>Recent Activity
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    {% if recent_activity %}
+                        <div class="activity-list-modern">
+                            {% for activity in recent_activity %}
+                            <div class="activity-item-modern mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="activity-icon-modern bg-{{ activity.color }} bg-opacity-10 me-3 mt-1">
+                                        <i class="fas {{ activity.icon }} text-{{ activity.color }}"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <p class="mb-1 fw-medium">{{ activity.description }}</p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ activity.timestamp.strftime('%b %d at %I:%M %p') }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state-modern text-center py-4">
+                            <div class="empty-icon-modern mb-3" style="font-size: 2rem;">
+                                <i class="fas fa-history text-muted"></i>
+                            </div>
+                            <p class="text-muted small mb-0">No recent activity to show</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Storage Usage Chart -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-gradient-primary text-white border-0">
+                    <div class="py-2">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="fas fa-chart-pie me-2"></i>Storage Usage Analysis
+                        </h5>
+                        <p class="mb-0 opacity-90 small">Monitor your account storage utilization</p>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="storage-progress-modern">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="mb-0 fw-semibold">
+                                        <span class="text-primary">{{ "%.1f MB"|format(total_size_mb if total_size_mb else 0) }}</span>
+                                        <span class="text-muted">used of</span>
+                                        <span class="text-success">{{ storage_limit_mb if storage_limit_mb else 100 }} MB</span>
+                                    </h6>
+                                    <span class="badge bg-info">
+                                        {% set usage_percent = (total_size_mb / (storage_limit_mb if storage_limit_mb else 100) * 100) if total_size_mb else 0 %}
+                                        {{ "%.1f"|format(usage_percent) }}% Used
+                                    </span>
+                                </div>
+                                <div class="progress mb-3 storage-progress-bar">
+                                    <div class="progress-bar bg-gradient-primary progress-bar-striped progress-bar-animated" 
+                                         role="progressbar" 
+                                         data-usage-percent="{{ usage_percent }}"
+                                         aria-valuenow="{{ usage_percent }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between text-muted small">
+                                    <span>
+                                        <i class="fas fa-file me-1"></i>
+                                        {{ total_files }} files stored
+                                    </span>
+                                    <span>
+                                        <i class="fas fa-shield-alt me-1 text-success"></i>
+                                        All files encrypted
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <button class="btn btn-outline-info" onclick="showStorageDetails()">
+                                <i class="fas fa-chart-bar me-2"></i>Detailed Analysis
+                            </button>
+                            {% if usage_percent > 80 %}
+                            <div class="mt-2">
+                                <div class="alert alert-warning alert-sm mb-0">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    <small>Storage almost full</small>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate counters
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        const current = parseInt(counter.textContent);
+        
+        if (target !== current) {
+            const increment = target / 50;
+            let count = 0;
+            
+            const timer = setInterval(() => {
+                count += increment;
+                if (count >= target) {
+                    counter.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    counter.textContent = Math.floor(count);
+                }
+            }, 20);
+        }
+    });
+
+    // Add smooth scroll to action cards
+    const actionCards = document.querySelectorAll('.action-card-modern');
+    actionCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.querySelector('.card').style.transform = 'translateY(-5px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.querySelector('.card').style.transform = 'translateY(0)';
+        });
+    });
+
+    // Auto-refresh stats every 5 minutes
+    setInterval(function() {
+        console.log('Dashboard stats refreshed');
+        // In production, make AJAX call to update stats
+    }, 300000);
+});
+
+// File action functions
+function viewFile(fileId) {
+    SecureShare.showToast('Opening file details...', 'info');
+    setTimeout(() => {
+        window.location.href = `/files/${fileId}`;
+    }, 500);
+}
+
+function shareFile(fileId) {
+    SecureShare.showToast('Generating secure sharing link...', 'info');
+    setTimeout(() => {
+        window.location.href = `/files/${fileId}/share`;
+    }, 500);
+}
+
+function downloadFile(fileId) {
+    SecureShare.showToast('Preparing secure download...', 'info');
+    setTimeout(() => {
+        window.location.href = `/files/${fileId}/download`;
+    }, 500);
+}
+
+function showCreateShare() {
+    SecureShare.showToast('Redirecting to file management...', 'info');
+    setTimeout(() => {
+        window.location.href = "{{ url_for('main.files') }}";
+    }, 500);
+}
+
+function accountSettings() {
+    SecureShare.showToast('Account settings coming soon!', 'info');
+}
+
+function showStorageDetails() {
+    SecureShare.showToast('Detailed storage analysis coming soon!', 'info');
+}
+
+// Set storage progress bar width
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBar = document.querySelector('.storage-progress-bar .progress-bar');
+    if (progressBar) {
+        const usagePercent = progressBar.getAttribute('data-usage-percent');
+        progressBar.style.width = usagePercent + '%';
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,306 @@
+<footer class="footer mt-auto py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Brand Section -->
+            <div class="col-lg-4 col-md-6">
+                <div class="footer-brand mb-3">
+                    <i class="fas fa-shield-alt me-2"></i>SecureShare
+                </div>
+                <p class="mb-3">
+                    Your trusted platform for secure file sharing with end-to-end encryption, 
+                    privacy protection, and professional-grade security features.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="btn btn-outline-light btn-sm me-2" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-sm me-2" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-sm me-2" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="{{ url_for('support.contact') }}" class="btn btn-outline-light btn-sm" aria-label="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div class="col-lg-2 col-md-6">
+                <h5 class="mb-3">Quick Links</h5>
+                <ul class="list-unstyled">
+                    {% if current_user.is_authenticated %}
+                        <li><a href="{{ url_for('main.dashboard') if 'main.dashboard' in url_for.__dict__ else '#' }}" class="footer-link">Dashboard</a></li>
+                        <li><a href="{{ url_for('main.files') if 'main.files' in url_for.__dict__ else '#' }}" class="footer-link">My Files</a></li>
+                        <li><a href="{{ url_for('main.upload_file') if 'main.upload_file' in url_for.__dict__ else '#' }}" class="footer-link">Upload File</a></li>
+                        <li><a href="#" class="footer-link">Settings</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('main.home') }}" class="footer-link">Home</a></li>
+                        <li><a href="{{ url_for('auth.login') }}" class="footer-link">Login</a></li>
+                        <li><a href="{{ url_for('auth.register') }}" class="footer-link">Register</a></li>
+                        <li><a href="{{ url_for('main.home') }}" class="footer-link">About Us</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+            <!-- Features -->
+            <div class="col-lg-2 col-md-6">
+                <h5 class="mb-3">Features</h5>
+                <ul class="list-unstyled">
+                    <li class="footer-feature">
+                        <i class="fas fa-shield-alt text-primary me-2"></i>AES Encryption
+                    </li>
+                    <li class="footer-feature">
+                        <i class="fas fa-clock text-success me-2"></i>Time-limited Links
+                    </li>
+                    <li class="footer-feature">
+                        <i class="fas fa-chart-bar text-info me-2"></i>Download Analytics
+                    </li>
+                    <li class="footer-feature">
+                        <i class="fas fa-mobile-alt text-warning me-2"></i>Mobile Responsive
+                    </li>
+                    <li class="footer-feature">
+                        <i class="fas fa-users text-secondary me-2"></i>Access Control
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Support -->
+            <div class="col-lg-2 col-md-6">
+                <h5 class="mb-3">Support</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ url_for('support.help') }}" class="footer-link">Help Center</a></li>
+                    <li><a href="{{ url_for('support.faq') }}" class="footer-link">FAQ</a></li>
+                    <li><a href="{{ url_for('support.contact') }}" class="footer-link">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <!-- Security & Legal -->
+            <div class="col-lg-2 col-md-6">
+                <h5 class="mb-3">Security & Legal</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="footer-link">Security Info</a></li>
+                    <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                    <li><a href="#" class="footer-link">Terms of Service</a></li>
+                    <li><a href="#" class="footer-link">Cookie Policy</a></li>
+                    <li><a href="#" class="footer-link">Compliance</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- System Status Indicator -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="status-indicator d-flex align-items-center justify-content-center mb-3">
+                    <span class="status-dot bg-success me-2"></span>
+                    <small class="text-muted">All systems operational</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- User Stats (if authenticated) -->
+        {% if current_user.is_authenticated %}
+        <div class="row">
+            <div class="col-12">
+                <div class="user-stats-card bg-dark bg-opacity-25 rounded p-3 mb-4">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <i class="fas fa-file-alt fa-lg text-primary mb-1"></i>
+                                <div class="h5 mb-0">{{ current_user.files.count() if current_user.files else 0 }}</div>
+                                <small class="text-muted">Files Uploaded</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <i class="fas fa-download fa-lg text-success mb-1"></i>
+                                <div class="h5 mb-0">{{ current_user.files.count() }}</div>
+                                <small class="text-muted">Total Files</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <i class="fas fa-link fa-lg text-info mb-1"></i>
+                                <div class="h5 mb-0">{{ current_user.access_logs.count() }}</div>
+                                <small class="text-muted">Access Logs</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <i class="fas fa-calendar fa-lg text-warning mb-1"></i>
+                                <div class="h5 mb-0">{{ current_user.created_at.strftime('%Y') if current_user.created_at else 'N/A' }}</div>
+                                <small class="text-muted">Member Since</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Newsletter Signup -->
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="newsletter-signup text-center mb-4">
+                    <h6 class="mb-3">Stay Updated</h6>
+                    <p class="small text-muted mb-3">Get notified about new features and security updates</p>
+                    <form class="d-flex" id="newsletter-form">
+                        <input type="email" class="form-control me-2" placeholder="Enter your email" required>
+                        <button class="btn btn-primary" type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Bottom -->
+        <hr class="border-secondary my-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="mb-0 small text-muted">
+                    &copy; {{ moment().format('YYYY') if moment else '2024' }} SecureShare. All rights reserved. 
+                    Built with <i class="fas fa-heart text-danger"></i> for security.
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="footer-badges">
+                    <span class="badge bg-success me-2">
+                        <i class="fas fa-shield-alt me-1"></i>256-bit SSL
+                    </span>
+                    <span class="badge bg-info me-2">
+                        <i class="fas fa-lock me-1"></i>AES Encrypted
+                    </span>
+                    <span class="badge bg-primary">
+                        <i class="fas fa-check me-1"></i>GDPR Compliant
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+.footer-link {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: block;
+    padding: 0.25rem 0;
+}
+
+.footer-link:hover {
+    color: #f1f5f9;
+    text-decoration: none;
+}
+
+.footer-feature {
+    padding: 0.25rem 0;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.user-stats-card {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item {
+    padding: 0.5rem;
+}
+
+.social-links .btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.social-links .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.newsletter-signup .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e2e8f0;
+}
+
+.newsletter-signup .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #3b82f6;
+    color: #f1f5f9;
+}
+
+.newsletter-signup .form-control::placeholder {
+    color: #94a3b8;
+}
+
+.footer-badges .badge {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .footer .row.g-4 {
+        text-align: center;
+    }
+    
+    .social-links {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    
+    .user-stats-card .row {
+        text-align: center;
+    }
+    
+    .footer-badges {
+        text-align: center !important;
+        margin-top: 1rem;
+    }
+}
+</style>
+
+<script>
+// Newsletter subscription
+document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = this.querySelector('input[type="email"]').value;
+    const button = this.querySelector('button');
+    const originalText = button.textContent;
+    
+    button.textContent = 'Subscribing...';
+    button.disabled = true;
+    
+    // Simulate API call
+    setTimeout(() => {
+        button.textContent = 'Subscribed!';
+        button.classList.remove('btn-primary');
+        button.classList.add('btn-success');
+        
+        setTimeout(() => {
+            button.textContent = originalText;
+            button.classList.remove('btn-success');
+            button.classList.add('btn-primary');
+            button.disabled = false;
+            this.reset();
+        }, 2000);
+    }, 1000);
+});
+</script>

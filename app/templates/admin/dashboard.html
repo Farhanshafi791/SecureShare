@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - SecureShare{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Admin Header -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="hero-section admin-hero bg-gradient-dark text-white py-5">
+                <div class="container text-center">
+                    <div class="admin-badge mx-auto mb-3">
+                        <i class="fas fa-shield-alt fs-1"></i>
+                    </div>
+                    <h1 class="display-5 fw-bold mb-3">Admin Dashboard</h1>
+                    <p class="lead opacity-90 mb-4">
+                        Welcome to the SecureShare administration panel
+                    </p>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center bg-transparent">
+                            <li class="breadcrumb-item">
+                                <a href="{{ url_for('main.home') }}" class="text-white text-decoration-none">
+                                    <i class="fas fa-home me-1"></i>Home
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active text-white" aria-current="page">
+                                <i class="fas fa-cogs me-1"></i>Admin Dashboard
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Statistics -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="fw-bold mb-4">
+                <i class="fas fa-chart-line me-2 text-primary"></i>System Statistics
+            </h2>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-lg h-100 admin-stat-card">
+                <div class="card-body p-4 position-relative overflow-hidden">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="admin-stat-icon bg-primary bg-opacity-10 mb-3">
+                                <i class="fas fa-users text-primary fs-2"></i>
+                            </div>
+                            <h3 class="fw-bold mb-1 counter" data-target="{{ user_count or 0 }}">{{ user_count or 0 }}</h3>
+                            <p class="text-muted mb-0">Total Users</p>
+                        </div>
+                        <div class="admin-stat-trend text-success">
+                            <i class="fas fa-arrow-up me-1"></i>
+                            <small>+12%</small>
+                        </div>
+                    </div>
+                    <div class="admin-stat-pattern"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-lg h-100 admin-stat-card">
+                <div class="card-body p-4 position-relative overflow-hidden">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="admin-stat-icon bg-danger bg-opacity-10 mb-3">
+                                <i class="fas fa-user-shield text-danger fs-2"></i>
+                            </div>
+                            <h3 class="fw-bold mb-1 counter" data-target="{{ admin_count or 0 }}">{{ admin_count or 0 }}</h3>
+                            <p class="text-muted mb-0">Admin Users</p>
+                        </div>
+                        <div class="admin-stat-trend text-info">
+                            <i class="fas fa-minus me-1"></i>
+                            <small>0%</small>
+                        </div>
+                    </div>
+                    <div class="admin-stat-pattern"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-lg h-100 admin-stat-card">
+                <div class="card-body p-4 position-relative overflow-hidden">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="admin-stat-icon bg-info bg-opacity-10 mb-3">
+                                <i class="fas fa-user text-info fs-2"></i>
+                            </div>
+                            <h3 class="fw-bold mb-1 counter" data-target="{{ regular_count or 0 }}">{{ regular_count or 0 }}</h3>
+                            <p class="text-muted mb-0">Regular Users</p>
+                        </div>
+                        <div class="admin-stat-trend text-success">
+                            <i class="fas fa-arrow-up me-1"></i>
+                            <small>+8%</small>
+                        </div>
+                    </div>
+                    <div class="admin-stat-pattern"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-lg h-100 admin-stat-card">
+                <div class="card-body p-4 position-relative overflow-hidden">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="admin-stat-icon bg-warning bg-opacity-10 mb-3">
+                                <i class="fas fa-file text-warning fs-2"></i>
+                            </div>
+                            <h3 class="fw-bold mb-1">{{ total_files or 0 }}</h3>
+                            <p class="text-muted mb-0">Total Files</p>
+                        </div>
+                        <div class="admin-stat-trend text-success">
+                            <i class="fas fa-arrow-up me-1"></i>
+                            <small>+15%</small>
+                        </div>
+                    </div>
+                    <div class="admin-stat-pattern"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Administration Tools -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="fw-bold mb-4">
+                <i class="fas fa-tools me-2 text-primary"></i>Administration Tools
+            </h2>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <a href="{{ url_for('admin.view_users') }}" class="admin-tool-card text-decoration-none">
+                <div class="card border-0 shadow-lg h-100 admin-tool-hover">
+                    <div class="card-body p-4 text-center">
+                        <div class="admin-tool-icon bg-primary bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-users text-primary fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">User Management</h4>
+                        <p class="text-muted mb-4">
+                            View, edit, and manage all user accounts and permissions
+                        </p>
+                        <div class="btn btn-primary">
+                            <i class="fas fa-arrow-right me-2"></i>Manage Users
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="admin-tool-card">
+                <div class="card border-0 shadow-lg h-100">
+                    <div class="card-body p-4 text-center">
+                        <div class="admin-tool-icon bg-success bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-folder text-success fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">File Management</h4>
+                        <p class="text-muted mb-4">
+                            Monitor and manage all files uploaded to the system
+                        </p>
+                        <div class="btn btn-outline-secondary disabled">
+                            <i class="fas fa-clock me-2"></i>Coming Soon
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="admin-tool-card">
+                <div class="card border-0 shadow-lg h-100">
+                    <div class="card-body p-4 text-center">
+                        <div class="admin-tool-icon bg-warning bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-cog text-warning fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">System Settings</h4>
+                        <p class="text-muted mb-4">
+                            Configure system preferences and security settings
+                        </p>
+                        <div class="btn btn-outline-secondary disabled">
+                            <i class="fas fa-clock me-2"></i>Coming Soon
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="admin-tool-card">
+                <div class="card border-0 shadow-lg h-100">
+                    <div class="card-body p-4 text-center">
+                        <div class="admin-tool-icon bg-info bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-chart-bar text-info fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Analytics</h4>
+                        <p class="text-muted mb-4">
+                            View detailed analytics and usage reports
+                        </p>
+                        <div class="btn btn-outline-secondary disabled">
+                            <i class="fas fa-clock me-2"></i>Coming Soon
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="admin-tool-card">
+                <div class="card border-0 shadow-lg h-100">
+                    <div class="card-body p-4 text-center">
+                        <div class="admin-tool-icon bg-secondary bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-history text-secondary fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Activity Logs</h4>
+                        <p class="text-muted mb-4">
+                            Monitor system activity and user actions
+                        </p>
+                        <div class="btn btn-outline-secondary disabled">
+                            <i class="fas fa-clock me-2"></i>Coming Soon
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="admin-tool-card">
+                <div class="card border-0 shadow-lg h-100">
+                    <div class="card-body p-4 text-center">
+                        <div class="admin-tool-icon bg-danger bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-shield-alt text-danger fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Security Center</h4>
+                        <p class="text-muted mb-4">
+                            Manage security policies and access controls
+                        </p>
+                        <div class="btn btn-outline-secondary disabled">
+                            <i class="fas fa-clock me-2"></i>Coming Soon
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-gradient-primary text-white border-0">
+                    <div class="py-2">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="fas fa-clock me-2"></i>Recent Admin Activity
+                        </h5>
+                        <p class="mb-0 opacity-90 small">Latest administrative actions and system events</p>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="fw-semibold mb-3">System Events</h6>
+                            <div class="admin-activity-list">
+                                <div class="admin-activity-item mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="admin-activity-icon bg-success bg-opacity-10 me-3">
+                                            <i class="fas fa-user-plus text-success"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-1 fw-medium">New user registered</p>
+                                            <small class="text-muted">2 hours ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="admin-activity-item mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="admin-activity-icon bg-primary bg-opacity-10 me-3">
+                                            <i class="fas fa-file-upload text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-1 fw-medium">File uploaded</p>
+                                            <small class="text-muted">4 hours ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="admin-activity-item mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="admin-activity-icon bg-warning bg-opacity-10 me-3">
+                                            <i class="fas fa-sign-out-alt text-warning"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-1 fw-medium">User session expired</p>
+                                            <small class="text-muted">6 hours ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6 class="fw-semibold mb-3">Admin Actions</h6>
+                            <div class="admin-activity-list">
+                                <div class="admin-activity-item mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="admin-activity-icon bg-info bg-opacity-10 me-3">
+                                            <i class="fas fa-user-edit text-info"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-1 fw-medium">User role updated</p>
+                                            <small class="text-muted">1 day ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="admin-activity-item mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="admin-activity-icon bg-secondary bg-opacity-10 me-3">
+                                            <i class="fas fa-database text-secondary"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-1 fw-medium">Database backup completed</p>
+                                            <small class="text-muted">2 days ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="admin-activity-item mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="admin-activity-icon bg-success bg-opacity-10 me-3">
+                                            <i class="fas fa-check-circle text-success"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-1 fw-medium">System health check passed</p>
+                                            <small class="text-muted">3 days ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate admin counters
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        const current = parseInt(counter.textContent);
+        
+        if (target !== current) {
+            const increment = target / 30;
+            let count = 0;
+            
+            const timer = setInterval(() => {
+                count += increment;
+                if (count >= target) {
+                    counter.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    counter.textContent = Math.floor(count);
+                }
+            }, 50);
+        }
+    });
+
+    // Add hover effects to admin tool cards
+    const toolCards = document.querySelectorAll('.admin-tool-hover');
+    toolCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px)';
+            this.style.transition = 'all 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Show admin notifications
+    setTimeout(() => {
+        SecureShare.showToast('Welcome to the Admin Dashboard', 'info');
+    }, 1000);
+});
+</script>
+{% endblock %}

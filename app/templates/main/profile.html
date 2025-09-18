@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+
+{% block title %}Profile Settings - SecureShare{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h1 class="mb-2"><i class="fas fa-user-cog me-2"></i>Profile Settings</h1>
+                    <p class="text-muted mb-0">Manage your account information and preferences</p>
+                </div>
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Profile Settings -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user me-2"></i>Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('main.update_profile') }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                {{ form.username(class="form-control") }}
+                                {% if form.username.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.username.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                {{ form.email(class="form-control") }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.email.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="first_name" class="form-label">First Name</label>
+                                {{ form.first_name(class="form-control") }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                {{ form.last_name(class="form-control") }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Bio</label>
+                            {{ form.bio(class="form-control", rows="3", placeholder="Tell us about yourself...") }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="timezone" class="form-label">Timezone</label>
+                                {{ form.timezone(class="form-select") }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="language" class="form-label">Language</label>
+                                {{ form.language(class="form-select") }}
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            <button type="reset" class="btn btn-outline-secondary">
+                                <i class="fas fa-undo me-2"></i>Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Password Change -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-lock me-2"></i>Change Password</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('main.change_password') }}">
+                        {{ password_form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label">Current Password</label>
+                            {{ password_form.current_password(class="form-control") }}
+                            {% if password_form.current_password.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in password_form.current_password.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="new_password" class="form-label">New Password</label>
+                                {{ password_form.new_password(class="form-control", onkeyup="checkPasswordStrength(this.value)") }}
+                                <div id="password-strength" class="mt-2"></div>
+                                {% if password_form.new_password.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in password_form.new_password.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="confirm_password" class="form-label">Confirm New Password</label>
+                                {{ password_form.confirm_password(class="form-control") }}
+                                {% if password_form.confirm_password.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in password_form.confirm_password.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Sidebar -->
+        <div class="col-lg-4">
+            <!-- Profile Summary -->
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <div class="profile-avatar mb-3">
+                        <div class="avatar-circle-large">
+                            {{ current_user.username[0].upper() }}
+                        </div>
+                    </div>
+                    <h5>{{ current_user.username }}</h5>
+                    <p class="text-muted">{{ current_user.email }}</p>
+                    <div class="badge-container">
+                        {% if current_user.email_verified %}
+                            <span class="badge bg-success mb-2">
+                                <i class="fas fa-check-circle me-1"></i>Verified
+                            </span>
+                        {% else %}
+                            <span class="badge bg-warning mb-2">
+                                <i class="fas fa-exclamation-triangle me-1"></i>Unverified
+                            </span>
+                        {% endif %}
+                        <span class="badge bg-primary">
+                            <i class="fas fa-crown me-1"></i>{{ current_user.role.title() if current_user.role else 'User' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Stats -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Account Statistics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="stat-item">
+                        <span class="stat-label">Files Uploaded</span>
+                        <span class="stat-value">{{ stats.total_files if stats else 0 }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Downloads</span>
+                        <span class="stat-value">{{ stats.total_downloads if stats else 0 }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Storage Used</span>
+                        <span class="stat-value">{{ "%.1f MB"|format(stats.storage_used_mb if stats else 0) }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Member Since</span>
+                        <span class="stat-value">{{ current_user.created_at.strftime('%b %Y') if current_user.created_at else 'N/A' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('main.files') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-folder me-2"></i>View My Files
+                        </a>
+                        <a href="{{ url_for('main.upload_file') }}" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-upload me-2"></i>Upload File
+                        </a>
+                        {% if not current_user.email_verified %}
+                            <button class="btn btn-outline-warning btn-sm" onclick="resendVerification()">
+                                <i class="fas fa-envelope me-2"></i>Resend Verification
+                            </button>
+                        {% endif %}
+                        <a href="{{ url_for('support.help') }}" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-question-circle me-2"></i>Get Help
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-avatar {
+    position: relative;
+}
+
+.avatar-circle-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0 auto;
+}
+
+.badge-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.password-strength {
+    height: 6px;
+    border-radius: 3px;
+    margin-top: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.strength-weak { background-color: #dc3545; width: 25%; }
+.strength-fair { background-color: #fd7e14; width: 50%; }
+.strength-good { background-color: #ffc107; width: 75%; }
+.strength-strong { background-color: #198754; width: 100%; }
+
+.strength-text {
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .avatar-circle-large {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+}
+</style>
+
+<script>
+function checkPasswordStrength(password) {
+    const strengthIndicator = document.getElementById('password-strength');
+    const strength = getPasswordStrength(password);
+    
+    let strengthClass = '';
+    let strengthText = '';
+    
+    if (password.length === 0) {
+        strengthIndicator.innerHTML = '';
+        return;
+    }
+    
+    switch (strength) {
+        case 1:
+            strengthClass = 'strength-weak';
+            strengthText = 'Weak';
+            break;
+        case 2:
+            strengthClass = 'strength-fair';
+            strengthText = 'Fair';
+            break;
+        case 3:
+            strengthClass = 'strength-good';
+            strengthText = 'Good';
+            break;
+        case 4:
+            strengthClass = 'strength-strong';
+            strengthText = 'Strong';
+            break;
+    }
+    
+    strengthIndicator.innerHTML = `
+        <div class="password-strength ${strengthClass}"></div>
+        <div class="strength-text text-${strengthClass.split('-')[1]}">${strengthText} password</div>
+    `;
+}
+
+function getPasswordStrength(password) {
+    let strength = 0;
+    
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    
+    return Math.min(strength, 4);
+}
+
+function resendVerification() {
+    fetch('{{ url_for("auth.resend_verification") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Verification email sent successfully!');
+        } else {
+            alert('Error sending verification email: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error sending verification email');
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error - SecureShare{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="text-center">
+                <!-- Error Illustration -->
+                <div class="error-illustration mb-4">
+                    <div class="error-code">
+                        <span class="number">5</span>
+                        <div class="zero-container">
+                            <div class="zero error-animation">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                        <span class="number">0</span>
+                    </div>
+                </div>
+                
+                <h1 class="error-title mb-3">Internal Server Error</h1>
+                <p class="error-description mb-4">
+                    Oops! Something went wrong on our servers. Our team has been notified and is working to fix this issue.
+                    Please try again in a few moments.
+                </p>
+                
+                <!-- Status Information -->
+                <div class="status-info mb-4">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="status-card">
+                                <i class="fas fa-clock text-warning fa-2x mb-2"></i>
+                                <h6>Incident Reported</h6>
+                                <p class="small text-muted" id="incident-time">Just now</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="status-card">
+                                <i class="fas fa-tools text-info fa-2x mb-2"></i>
+                                <h6>Team Notified</h6>
+                                <p class="small text-muted">Engineers are investigating</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="status-card">
+                                <i class="fas fa-shield-alt text-success fa-2x mb-2"></i>
+                                <h6>Data Secure</h6>
+                                <p class="small text-muted">Your files are safe</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons mb-5">
+                    <button onclick="retryPage()" class="btn btn-primary btn-lg me-3" id="retry-btn">
+                        <i class="fas fa-redo me-2"></i>Try Again
+                    </button>
+                    <a href="{{ url_for('main.home') }}" class="btn btn-outline-secondary btn-lg me-3">
+                        <i class="fas fa-home me-2"></i>Go Home
+                    </a>
+                    <a href="{{ url_for('support.status') }}" class="btn btn-outline-info btn-lg">
+                        <i class="fas fa-heartbeat me-2"></i>System Status
+                    </a>
+                </div>
+                
+                <!-- What You Can Do -->
+                <div class="help-section">
+                    <h5 class="mb-3">What you can do:</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="help-card">
+                                <i class="fas fa-sync-alt text-primary fa-lg mb-2"></i>
+                                <h6>Refresh the Page</h6>
+                                <p class="small text-muted">The issue might be temporary. Try refreshing the page.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="help-card">
+                                <i class="fas fa-clock text-warning fa-lg mb-2"></i>
+                                <h6>Wait a Moment</h6>
+                                <p class="small text-muted">Our servers might be experiencing high load.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="help-card">
+                                <i class="fas fa-file-alt text-success fa-lg mb-2"></i>
+                                <h6>Check Your Files</h6>
+                                <p class="small text-muted">Your uploaded files are safe and encrypted.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="help-card">
+                                <i class="fas fa-envelope text-info fa-lg mb-2"></i>
+                                <h6>Contact Support</h6>
+                                <p class="small text-muted">If the problem persists, let us know.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Error Details (for developers) -->
+                <div class="error-details mt-5">
+                    <details class="bg-light p-3 rounded">
+                        <summary class="fw-bold text-secondary cursor-pointer">Technical Details</summary>
+                        <div class="mt-3 text-start">
+                            <p class="small text-muted mb-2"><strong>Error ID:</strong> <code id="error-id"></code></p>
+                            <p class="small text-muted mb-2"><strong>Timestamp:</strong> <code id="error-timestamp"></code></p>
+                            <p class="small text-muted mb-2"><strong>Server:</strong> <code>SecureShare-{{ server_id if server_id else 'Web-01' }}</code></p>
+                            <p class="small text-muted mb-0"><strong>User Agent:</strong> <code id="user-agent"></code></p>
+                        </div>
+                    </details>
+                </div>
+                
+                <!-- Contact Support -->
+                <div class="contact-support mt-4 p-4 bg-light rounded">
+                    <h6>Need immediate assistance?</h6>
+                    <p class="text-muted mb-3">Our support team is available 24/7 to help resolve any issues.</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{{ url_for('support.contact') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-envelope me-2"></i>Contact Support
+                        </a>
+                        <a href="{{ url_for('support.status') }}" class="btn btn-outline-info">
+                            <i class="fas fa-chart-line me-2"></i>Service Status
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-illustration {
+    margin: 2rem 0;
+}
+
+.error-code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8rem;
+    font-weight: bold;
+    color: #ef4444;
+    margin-bottom: 1rem;
+}
+
+.number {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.zero-container {
+    margin: 0 1rem;
+    position: relative;
+}
+
+.zero {
+    width: 120px;
+    height: 120px;
+    border: 8px solid #ef4444;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #ef4444;
+}
+
+.error-animation {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+}
+
+.error-title {
+    font-size: 2.5rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.error-description {
+    font-size: 1.1rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.status-card, .help-card {
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.status-card:hover, .help-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #3b82f6;
+}
+
+.action-buttons .btn {
+    min-width: 140px;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+}
+
+.contact-support {
+    border: 2px dashed #e2e8f0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+}
+
+.error-details summary {
+    cursor: pointer;
+    user-select: none;
+}
+
+.error-details summary:hover {
+    color: #3b82f6 !important;
+}
+
+.error-details code {
+    background-color: #f1f5f9;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+    .error-code {
+        font-size: 5rem;
+    }
+    
+    .zero {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5rem;
+    }
+    
+    .error-title {
+        font-size: 2rem;
+    }
+    
+    .action-buttons .btn {
+        margin-bottom: 0.5rem;
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .status-info .col-md-4,
+    .help-section .col-md-6 {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+
+<script>
+function retryPage() {
+    const retryBtn = document.getElementById('retry-btn');
+    const originalText = retryBtn.innerHTML;
+    
+    retryBtn.innerHTML = '<span class="loading me-2"></span>Retrying...';
+    retryBtn.disabled = true;
+    
+    // Add a small delay to show loading state
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
+
+// Generate error details
+document.addEventListener('DOMContentLoaded', function() {
+    // Generate random error ID
+    const errorId = 'ERR-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5).toUpperCase();
+    document.getElementById('error-id').textContent = errorId;
+    
+    // Set timestamp
+    const timestamp = new Date().toISOString();
+    document.getElementById('error-timestamp').textContent = timestamp;
+    
+    // Set incident time
+    document.getElementById('incident-time').textContent = new Date().toLocaleTimeString();
+    
+    // Set user agent
+    document.getElementById('user-agent').textContent = navigator.userAgent.substring(0, 80) + '...';
+    
+    // Animate error code on load
+    const errorCode = document.querySelector('.error-code');
+    errorCode.style.opacity = '0';
+    errorCode.style.transform = 'scale(0.8)';
+    
+    setTimeout(() => {
+        errorCode.style.transition = 'all 0.8s ease';
+        errorCode.style.opacity = '1';
+        errorCode.style.transform = 'scale(1)';
+    }, 100);
+    
+    // Auto-retry countdown (optional)
+    let countdown = 30;
+    const countdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown <= 0) {
+            clearInterval(countdownInterval);
+            // Optionally auto-retry after 30 seconds
+            // retryPage();
+        }
+    }, 1000);
+});
+
+// Add keyboard shortcut for retry
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'r' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        retryPage();
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Login - SecureShare{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg fade-in">
+                <div class="card-header bg-gradient-primary text-white text-center border-0">
+                    <div class="py-3">
+                        <div class="feature-icon mx-auto mb-3" style="width: 50px; height: 50px;">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </div>
+                        <h4 class="mb-0 fw-semibold">Welcome Back</h4>
+                        <p class="mb-0 opacity-90">Sign in to your SecureShare account</p>
+                    </div>
+                </div>
+                <div class="card-body p-5">
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} border-0 mb-4">
+                                    <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' }} me-2"></i>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" class="needs-validation" novalidate>
+                        <!-- Email Field -->
+                        <div class="mb-4">
+                            <label for="email" class="form-label fw-medium">
+                                <i class="fas fa-envelope me-1"></i>Email Address
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   placeholder="Enter your email address" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid email address.
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-medium">
+                                <i class="fas fa-lock me-1"></i>Password
+                            </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" 
+                                       placeholder="Enter your password" required>
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback">
+                                Please provide your password.
+                            </div>
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                                <label class="form-check-label" for="remember">
+                                    Remember me for 30 days
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                <span class="loading-spinner d-none"></span>
+                            </button>
+                        </div>
+
+                        <!-- Forgot Password -->
+                        <div class="text-center mb-3">
+                            <a href="#" class="text-muted text-decoration-none small">
+                                <i class="fas fa-key me-1"></i>Forgot your password?
+                            </a>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center">
+                        <p class="text-muted mb-3">Don't have an account?</p>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Security Notice -->
+            <div class="text-center mt-4">
+                <small class="text-muted">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    Your connection is secured with industry-standard encryption
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            const forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    const button = form.querySelector('button[type="submit"]');
+                    const spinner = button.querySelector('.loading-spinner');
+                    const icon = button.querySelector('.fas');
+                    
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        
+                        // Reset button state on validation failure
+                        if (spinner && icon) {
+                            spinner.classList.add('d-none');
+                            icon.classList.remove('d-none');
+                            button.disabled = false;
+                            button.textContent = button.textContent.replace('Processing...', 'Sign In');
+                        }
+                    } else {
+                        // Show loading spinner only when validation passes
+                        if (spinner && icon) {
+                            icon.classList.add('d-none');
+                            spinner.classList.remove('d-none');
+                            button.disabled = true;
+                        }
+                        
+                        // Reset button after timeout as fallback
+                        setTimeout(() => {
+                            if (spinner && icon) {
+                                spinner.classList.add('d-none');
+                                icon.classList.remove('d-none');
+                                button.disabled = false;
+                                button.textContent = button.textContent.replace('Processing...', 'Sign In');
+                            }
+                        }, 3000);
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+    
+    // Password toggle - Override modern-ui.js behavior for login page
+    setTimeout(function() {
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordField = document.getElementById('password');
+        
+        if (togglePassword && passwordField) {
+            // Remove any existing event listeners by cloning the element
+            const newToggle = togglePassword.cloneNode(true);
+            togglePassword.parentNode.replaceChild(newToggle, togglePassword);
+            
+            newToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const icon = this.querySelector('i');
+                
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                    console.log('Password shown');
+                } else {
+                    passwordField.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                    console.log('Password hidden');
+                }
+            });
+        }
+    }, 100);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Frequently Asked Questions{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="fas fa-question-circle me-2"></i>Frequently Asked Questions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="faqAccordion">
+                        
+                        <!-- General Questions -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                    <strong>What is SecureShare?</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    SecureShare is a secure file sharing platform that allows you to upload, encrypt, and share files safely. All files are encrypted with military-grade AES-256 encryption, ensuring your data remains private and secure.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Questions -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                    <strong>Do I need an account to download files?</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    No! You only need an account to upload files. Anyone with a share link can download files without creating an account, making sharing simple and convenient.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Questions -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                    <strong>How secure are my files?</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Very secure! We use AES-256 encryption (the same standard used by banks and military) to encrypt all files. Each file has a unique encryption key, and all access is logged for security auditing.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- File Upload Questions -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                                    <strong>What file types can I upload?</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    We support most common file types including:
+                                    <ul class="mt-2">
+                                        <li><strong>Documents:</strong> PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX</li>
+                                        <li><strong>Images:</strong> PNG, JPG, JPEG, GIF</li>
+                                        <li><strong>Archives:</strong> ZIP, RAR, 7Z</li>
+                                        <li><strong>Text:</strong> TXT</li>
+                                    </ul>
+                                    Maximum file size is 16MB.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sharing Questions -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                                    <strong>How do share links work?</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Share links are unique, cryptographically secure URLs that allow anyone to download your file. The links contain no identifying information about you or the file name, ensuring privacy. You can generate and copy share links from your "My Files" page.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Security -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSix">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix">
+                                    <strong>What are the password requirements?</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    For your security, passwords must meet these requirements:
+                                    <ul class="mt-2">
+                                        <li>At least 8 characters long</li>
+                                        <li>At least one uppercase letter (A-Z)</li>
+                                        <li>At least one lowercase letter (a-z)</li>
+                                        <li>At least one number (0-9)</li>
+                                        <li>At least one special character (!@#$%^&*)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Session Questions -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSeven">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven">
+                                    <strong>How long do login sessions last?</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseSeven" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    For security, login sessions automatically expire after 30 minutes of inactivity. You'll receive a warning 5 minutes before expiration, giving you time to save your work or extend your session.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Troubleshooting -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingEight">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight">
+                                    <strong>I'm having trouble uploading files. What should I do?</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseEight" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    If you're experiencing upload issues, try these steps:
+                                    <ol>
+                                        <li>Check that your file is under 16MB</li>
+                                        <li>Verify the file type is supported</li>
+                                        <li>Make sure you have a stable internet connection</li>
+                                        <li>Try refreshing the page and uploading again</li>
+                                        <li>If problems persist, contact our support team</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingNine">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine">
+                                    <strong>How can I get additional help?</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseNine" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    If you can't find the answer to your question here, please visit our <a href="{{ url_for('support.contact') }}" class="text-decoration-none">Contact Support</a> page to send us a message. We typically respond within 24 hours.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

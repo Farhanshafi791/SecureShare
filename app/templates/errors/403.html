@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+
+{% block title %}Access Forbidden - SecureShare{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="text-center">
+                <!-- Error Illustration -->
+                <div class="error-illustration mb-4">
+                    <div class="error-code">
+                        <span class="number">4</span>
+                        <div class="zero-container">
+                            <div class="zero forbidden-animation">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <span class="number">3</span>
+                    </div>
+                </div>
+                
+                <h1 class="error-title mb-3">Access Forbidden</h1>
+                <p class="error-description mb-4">
+                    You don't have permission to access this resource. This could be due to insufficient privileges 
+                    or the resource being restricted to certain user roles.
+                </p>
+                
+                <!-- Security Information -->
+                <div class="security-info mb-4">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="security-card">
+                                <i class="fas fa-shield-alt text-success fa-2x mb-2"></i>
+                                <h6>Your Account is Safe</h6>
+                                <p class="small text-muted">This incident has been logged</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="security-card">
+                                <i class="fas fa-user-shield text-info fa-2x mb-2"></i>
+                                <h6>Access Control Active</h6>
+                                <p class="small text-muted">Unauthorized access prevented</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="security-card">
+                                <i class="fas fa-eye text-warning fa-2x mb-2"></i>
+                                <h6>Activity Monitored</h6>
+                                <p class="small text-muted">All access attempts are tracked</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- User Status -->
+                {% if current_user.is_authenticated %}
+                <div class="user-status mb-4">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Logged in as:</strong> {{ current_user.username }} 
+                        <span class="badge bg-secondary ms-2">{{ current_user.role.title() if current_user.role else 'User' }}</span>
+                    </div>
+                </div>
+                {% else %}
+                <div class="user-status mb-4">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Not logged in:</strong> You may need to sign in to access this resource.
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons mb-5">
+                    {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('main.home') }}" class="btn btn-outline-secondary btn-lg me-3">
+                        <i class="fas fa-home me-2"></i>Go Home
+                    </a>
+                    <button onclick="goBack()" class="btn btn-outline-info btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Go Back
+                    </button>
+                </div>
+                
+                <!-- Common Reasons -->
+                <div class="reasons-section">
+                    <h5 class="mb-3">Common reasons for this error:</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="reason-card">
+                                <i class="fas fa-user-times text-danger fa-lg mb-2"></i>
+                                <h6>Insufficient Permissions</h6>
+                                <p class="small text-muted">Your account doesn't have the required access level for this resource.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="reason-card">
+                                <i class="fas fa-clock text-warning fa-lg mb-2"></i>
+                                <h6>Session Expired</h6>
+                                <p class="small text-muted">Your login session may have expired. Try signing in again.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="reason-card">
+                                <i class="fas fa-link text-info fa-lg mb-2"></i>
+                                <h6>Invalid Link</h6>
+                                <p class="small text-muted">The link you followed may be expired or invalid.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="reason-card">
+                                <i class="fas fa-ban text-secondary fa-lg mb-2"></i>
+                                <h6>Restricted Content</h6>
+                                <p class="small text-muted">This content is restricted to specific users or roles.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Available Resources -->
+                {% if current_user.is_authenticated %}
+                <div class="available-resources mt-5">
+                    <h5 class="mb-3">What you can access:</h5>
+                    <div class="row g-3">
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ url_for('main.dashboard') if 'main.dashboard' in url_for.__dict__ else '#' }}" class="card h-100 text-decoration-none">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-tachometer-alt fa-2x text-primary mb-2"></i>
+                                    <h6 class="card-title">Dashboard</h6>
+                                    <p class="card-text small text-muted">Your account overview</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ url_for('main.files') if 'main.files' in url_for.__dict__ else '#' }}" class="card h-100 text-decoration-none">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-folder fa-2x text-success mb-2"></i>
+                                    <h6 class="card-title">My Files</h6>
+                                    <p class="card-text small text-muted">Your uploaded files</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ url_for('main.upload_file') if 'main.upload_file' in url_for.__dict__ else '#' }}" class="card h-100 text-decoration-none">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-upload fa-2x text-info mb-2"></i>
+                                    <h6 class="card-title">Upload</h6>
+                                    <p class="card-text small text-muted">Share new files</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ url_for('support.help') }}" class="card h-100 text-decoration-none">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-question-circle fa-2x text-warning mb-2"></i>
+                                    <h6 class="card-title">Help</h6>
+                                    <p class="card-text small text-muted">Get support</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Access Request -->
+                <div class="access-request mt-5 p-4 bg-light rounded">
+                    <h6>Need access to this resource?</h6>
+                    <p class="text-muted mb-3">
+                        If you believe you should have access to this resource, please contact your administrator 
+                        or our support team with details about what you were trying to access.
+                    </p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{{ url_for('support.contact') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-envelope me-2"></i>Request Access
+                        </a>
+                        {% if current_user.is_authenticated %}
+                        <button onclick="reportIssue()" class="btn btn-outline-warning">
+                            <i class="fas fa-flag me-2"></i>Report Issue
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-illustration {
+    margin: 2rem 0;
+}
+
+.error-code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8rem;
+    font-weight: bold;
+    color: #f59e0b;
+    margin-bottom: 1rem;
+}
+
+.number {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.zero-container {
+    margin: 0 1rem;
+    position: relative;
+}
+
+.zero {
+    width: 120px;
+    height: 120px;
+    border: 8px solid #f59e0b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #f59e0b;
+}
+
+.forbidden-animation {
+    animation: shake 2s ease-in-out infinite;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.error-title {
+    font-size: 2.5rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.error-description {
+    font-size: 1.1rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.security-card, .reason-card {
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.security-card:hover, .reason-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #f59e0b;
+}
+
+.available-resources .card {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    color: inherit;
+}
+
+.available-resources .card:hover {
+    transform: translateY(-5px);
+    border-color: #3b82f6;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    color: inherit;
+    text-decoration: none;
+}
+
+.action-buttons .btn {
+    min-width: 140px;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+}
+
+.access-request {
+    border: 2px dashed #e2e8f0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+}
+
+.user-status .alert {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .error-code {
+        font-size: 5rem;
+    }
+    
+    .zero {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5rem;
+    }
+    
+    .error-title {
+        font-size: 2rem;
+    }
+    
+    .action-buttons .btn {
+        margin-bottom: 0.5rem;
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .security-info .col-md-4,
+    .reasons-section .col-md-6,
+    .available-resources .col-md-3 {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+
+<script>
+function goBack() {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        window.location.href = "{{ url_for('main.home') }}";
+    }
+}
+
+function reportIssue() {
+    const currentUrl = window.location.href;
+    const reportUrl = "{{ url_for('support.contact') }}?subject=Access%20Issue&message=" + 
+        encodeURIComponent("I was trying to access: " + currentUrl + " but received a 403 Forbidden error.");
+    window.location.href = reportUrl;
+}
+
+// Add animation on load
+document.addEventListener('DOMContentLoaded', function() {
+    const errorCode = document.querySelector('.error-code');
+    errorCode.style.opacity = '0';
+    errorCode.style.transform = 'scale(0.8)';
+    
+    setTimeout(() => {
+        errorCode.style.transition = 'all 0.8s ease';
+        errorCode.style.opacity = '1';
+        errorCode.style.transform = 'scale(1)';
+    }, 100);
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'h' && e.altKey) {
+        e.preventDefault();
+        window.location.href = "{{ url_for('main.home') }}";
+    }
+});
+</script>
+{% endblock %}

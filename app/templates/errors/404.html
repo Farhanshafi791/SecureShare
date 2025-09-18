@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - SecureShare{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="text-center">
+                <!-- Error Illustration -->
+                <div class="error-illustration mb-4">
+                    <div class="error-code">
+                        <span class="number">4</span>
+                        <div class="zero-container">
+                            <div class="zero">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                        <span class="number">4</span>
+                    </div>
+                </div>
+                
+                <h1 class="error-title mb-3">Page Not Found</h1>
+                <p class="error-description mb-4">
+                    Sorry, the page you're looking for doesn't exist or has been moved. 
+                    Let's get you back on track.
+                </p>
+                
+                <!-- Search Box -->
+                <div class="search-section mb-4">
+                    <form class="d-flex justify-content-center" onsubmit="return false;">
+                        <div class="input-group" style="max-width: 400px;">
+                            <input type="text" class="form-control" placeholder="Search for files or pages..." id="search-input">
+                            <button class="btn btn-primary" type="button" onclick="performSearch()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons mb-5">
+                    <a href="{{ url_for('main.home') }}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-home me-2"></i>Go Home
+                    </a>
+                    <button onclick="goBack()" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Go Back
+                    </button>
+                </div>
+                
+                <!-- Helpful Links -->
+                <div class="helpful-links">
+                    <h5 class="mb-3">Maybe you're looking for:</h5>
+                    <div class="row g-3">
+                        {% if current_user.is_authenticated %}
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ url_for('main.dashboard') if 'main.dashboard' in url_for.__dict__ else '#' }}" class="card h-100 text-decoration-none">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-tachometer-alt fa-2x text-primary mb-2"></i>
+                                    <h6 class="card-title">Dashboard</h6>
+                                    <p class="card-text small text-muted">Your account overview</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ url_for('main.files') if 'main.files' in url_for.__dict__ else '#' }}" class="card h-100 text-decoration-none">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-folder fa-2x text-success mb-2"></i>
+                                    <h6 class="card-title">My Files</h6>
+                                    <p class="card-text small text-muted">Manage your uploads</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ url_for('main.upload_file') if 'main.upload_file' in url_for.__dict__ else '#' }}" class="card h-100 text-decoration-none">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-upload fa-2x text-info mb-2"></i>
+                                    <h6 class="card-title">Upload</h6>
+                                    <p class="card-text small text-muted">Share new files</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="col-md-4">
+                            <a href="{{ url_for('auth.register') }}" class="card h-100 text-decoration-none">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-user-plus fa-2x text-primary mb-2"></i>
+                                    <h6 class="card-title">Sign Up</h6>
+                                    <p class="card-text small text-muted">Create an account</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ url_for('auth.login') }}" class="card h-100 text-decoration-none">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-sign-in-alt fa-2x text-success mb-2"></i>
+                                    <h6 class="card-title">Login</h6>
+                                    <p class="card-text small text-muted">Access your account</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ url_for('support.help') }}" class="card h-100 text-decoration-none">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-question-circle fa-2x text-warning mb-2"></i>
+                                    <h6 class="card-title">Help Center</h6>
+                                    <p class="card-text small text-muted">Get support</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Support -->
+                <div class="contact-support mt-5 p-4 bg-light rounded">
+                    <h6>Still can't find what you're looking for?</h6>
+                    <p class="text-muted mb-3">Our support team is here to help you find the right page or resource.</p>
+                    <a href="{{ url_for('support.contact') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-envelope me-2"></i>Contact Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-illustration {
+    margin: 2rem 0;
+}
+
+.error-code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8rem;
+    font-weight: bold;
+    color: #3b82f6;
+    margin-bottom: 1rem;
+}
+
+.number {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.zero-container {
+    margin: 0 1rem;
+    position: relative;
+}
+
+.zero {
+    width: 120px;
+    height: 120px;
+    border: 8px solid #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #64748b;
+    animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.error-title {
+    font-size: 2.5rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.error-description {
+    font-size: 1.1rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.helpful-links .card {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    color: inherit;
+}
+
+.helpful-links .card:hover {
+    transform: translateY(-5px);
+    border-color: #3b82f6;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    color: inherit;
+    text-decoration: none;
+}
+
+.search-section .input-group {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.search-section .form-control {
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.search-section .form-control:focus {
+    box-shadow: none;
+    border: none;
+}
+
+.search-section .btn {
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0 50px 50px 0;
+}
+
+.action-buttons .btn {
+    min-width: 150px;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+}
+
+.contact-support {
+    border: 2px dashed #e2e8f0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+}
+
+@media (max-width: 768px) {
+    .error-code {
+        font-size: 5rem;
+    }
+    
+    .zero {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5rem;
+    }
+    
+    .error-title {
+        font-size: 2rem;
+    }
+    
+    .action-buttons .btn {
+        margin-bottom: 0.5rem;
+        min-width: auto;
+    }
+    
+    .helpful-links .col-md-3 {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+
+<script>
+function goBack() {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        window.location.href = "{{ url_for('main.home') }}";
+    }
+}
+
+function performSearch() {
+    const searchTerm = document.getElementById('search-input').value.trim();
+    if (searchTerm) {
+        // In a real application, this would redirect to a search page
+        // For now, we'll redirect to the home page with a search parameter
+        window.location.href = "{{ url_for('main.home') }}?search=" + encodeURIComponent(searchTerm);
+    }
+}
+
+// Allow Enter key to trigger search
+document.getElementById('search-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        performSearch();
+    }
+});
+
+// Add some interactive effects
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate error code on load
+    const errorCode = document.querySelector('.error-code');
+    errorCode.style.opacity = '0';
+    errorCode.style.transform = 'scale(0.8)';
+    
+    setTimeout(() => {
+        errorCode.style.transition = 'all 0.8s ease';
+        errorCode.style.opacity = '1';
+        errorCode.style.transform = 'scale(1)';
+    }, 100);
+    
+    // Add focus to search input after a delay
+    setTimeout(() => {
+        document.getElementById('search-input').focus();
+    }, 1500);
+});
+</script>
+{% endblock %}

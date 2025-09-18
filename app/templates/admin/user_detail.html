@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block title %}User Details - {{ user.username }} - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h1 class="mb-2">
+                        <i class="fas fa-user me-2"></i>User Details - {{ user.username }}
+                    </h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{{ url_for('admin.dashboard') }}">Admin Dashboard</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ url_for('admin.view_users') }}">Users</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ user.username }}</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div>
+                    <a href="{{ url_for('admin.view_users') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Users
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- User Information Card -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>User Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="user-avatar mx-auto mb-3">
+                            <i class="fas fa-user-circle text-primary" style="font-size: 4rem;"></i>
+                        </div>
+                        <h4 class="mb-1">{{ user.username }}</h4>
+                        <span class="badge bg-{% if user.role == 'admin' %}danger{% else %}primary{% endif %} fs-6">
+                            {{ user.role.title() }}
+                        </span>
+                    </div>
+                    
+                    <table class="table table-borderless">
+                        <tr>
+                            <td><strong>User ID:</strong></td>
+                            <td>{{ user.id }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email:</strong></td>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Username:</strong></td>
+                            <td>{{ user.username }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Role:</strong></td>
+                            <td>
+                                <span class="badge bg-{% if user.role == 'admin' %}danger{% else %}primary{% endif %}">
+                                    {{ user.role.title() }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Account Created:</strong></td>
+                            <td>{{ user.created_at.strftime('%B %d, %Y') if user.created_at else 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email Verified:</strong></td>
+                            <td>
+                                {% if user.email_verified %}
+                                    <span class="badge bg-success">Verified</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Not Verified</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin Actions Card -->
+            {% if user.id != current_user.id %}
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs me-2"></i>Admin Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-warning" onclick="resetUserPassword('{{ user.id }}')">
+                            <i class="fas fa-key me-2"></i>Reset Password
+                        </button>
+                        
+                        {% if not user.email_verified %}
+                        <button class="btn btn-info" onclick="sendVerificationEmail('{{ user.id }}')">
+                            <i class="fas fa-envelope me-2"></i>Send Verification Email
+                        </button>
+                        {% endif %}
+                        
+                        <button class="btn btn-danger" onclick="deleteUser('{{ user.id }}', '{{ user.username }}')">
+                            <i class="fas fa-trash me-2"></i>Delete User
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- User Files and Activity -->
+        <div class="col-md-8">
+            <!-- Files Statistics -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-files-o me-2"></i>File Statistics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h3 class="text-primary mb-1">{{ user.files|length }}</h3>
+                                <p class="text-muted mb-0">Total Files</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h3 class="text-success mb-1">{{ user.files|selectattr('is_shared')|list|length }}</h3>
+                                <p class="text-muted mb-0">Shared Files</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h3 class="text-info mb-1">{{ user.files|sum(attribute='download_count') }}</h3>
+                                <p class="text-muted mb-0">Total Downloads</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h3 class="text-warning mb-1">{{ "%.1f"|format((user.files|sum(attribute='file_size') or 0) / 1024 / 1024) }}</h3>
+                                <p class="text-muted mb-0">MB Used</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Files -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clock me-2"></i>Recent Files
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if user.files %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Filename</th>
+                                    <th>Size</th>
+                                    <th>Uploaded</th>
+                                    <th>Downloads</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for file in user.files[:10] %}
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-file me-2"></i>
+                                        {{ file.original_filename }}
+                                    </td>
+                                    <td>{{ "%.2f"|format((file.file_size or 0) / 1024) }} KB</td>
+                                    <td>{{ file.upload_time.strftime('%m/%d/%Y') }}</td>
+                                    <td>{{ file.download_count }}</td>
+                                    <td>
+                                        {% if file.is_shared %}
+                                            <span class="badge bg-success">Shared</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Private</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-folder-open text-muted mb-3" style="font-size: 3rem;"></i>
+                        <p class="text-muted">This user hasn't uploaded any files yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete User Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm User Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the user <strong id="deleteUsername"></strong>?</p>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    This action cannot be undone. All user data and files will be permanently deleted.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteUserForm" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-danger">Delete User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function deleteUser(userId, username) {
+    document.getElementById('deleteUsername').textContent = username;
+    document.getElementById('deleteUserForm').action = `{{ url_for('admin.view_users') }}/${userId}/delete`;
+    new bootstrap.Modal(document.getElementById('deleteUserModal')).show();
+}
+
+function resetUserPassword(userId) {
+    if (confirm('Are you sure you want to reset this user\'s password? They will receive a new temporary password via email.')) {
+        // This would need to be implemented in the backend
+        fetch(`/admin/users/${userId}/reset-password`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('Password reset email sent successfully!', 'success');
+            } else {
+                showAlert('Error resetting password. Please try again.', 'danger');
+            }
+        })
+        .catch(error => {
+            showAlert('Error resetting password. Please try again.', 'danger');
+        });
+    }
+}
+
+function sendVerificationEmail(userId) {
+    fetch(`/admin/users/${userId}/verify-email`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('Verification email sent successfully!', 'success');
+        } else {
+            showAlert('Error sending verification email. Please try again.', 'danger');
+        }
+    })
+    .catch(error => {
+        showAlert('Error sending verification email. Please try again.', 'danger');
+    });
+}
+
+function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const container = document.querySelector('.container-fluid');
+    container.insertBefore(alertDiv, container.firstChild);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+</script>
+{% endblock %}
