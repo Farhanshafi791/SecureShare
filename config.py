@@ -74,6 +74,11 @@ class Config:
     
     # Logging configuration
     LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
+    
+    @classmethod
+    def init_app(cls, app):
+        """Initialize app with configuration-specific settings."""
+        pass
 
 class DevelopmentConfig(Config):
     """Development configuration."""
