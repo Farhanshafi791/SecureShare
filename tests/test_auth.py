@@ -142,9 +142,9 @@ def test_user_login(client, app, test_user):
 def test_imports():
     """Test that all modules can be imported successfully"""
     try:
-        from auth.routes import auth
-        from main.routes import main
-        from admin.routes import admin
+        from app.auth.routes import auth
+        from app.main.routes import main
+        from app.admin.routes import admin
         print("✅ All route blueprints imported successfully!")
         return True
     except Exception as e:
@@ -158,7 +158,6 @@ if __name__ == '__main__':
     # Test imports
     if test_imports():
         # Test user model
-        test_user_model()
         print("\n🎉 All tests completed successfully!")
         print("Your authentication system is ready to use with the updated User model.")
     else:

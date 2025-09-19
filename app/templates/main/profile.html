@@ -162,15 +162,6 @@
                     <h5>{{ current_user.username }}</h5>
                     <p class="text-muted">{{ current_user.email }}</p>
                     <div class="badge-container">
-                        {% if current_user.email_verified %}
-                            <span class="badge bg-success mb-2">
-                                <i class="fas fa-check-circle me-1"></i>Verified
-                            </span>
-                        {% else %}
-                            <span class="badge bg-warning mb-2">
-                                <i class="fas fa-exclamation-triangle me-1"></i>Unverified
-                            </span>
-                        {% endif %}
                         <span class="badge bg-primary">
                             <i class="fas fa-crown me-1"></i>{{ current_user.role.title() if current_user.role else 'User' }}
                         </span>
@@ -216,11 +207,6 @@
                         <a href="{{ url_for('main.upload_file') }}" class="btn btn-outline-success btn-sm">
                             <i class="fas fa-upload me-2"></i>Upload File
                         </a>
-                        {% if not current_user.email_verified %}
-                            <button class="btn btn-outline-warning btn-sm" onclick="resendVerification()">
-                                <i class="fas fa-envelope me-2"></i>Resend Verification
-                            </button>
-                        {% endif %}
                         <a href="{{ url_for('support.help') }}" class="btn btn-outline-info btn-sm">
                             <i class="fas fa-question-circle me-2"></i>Get Help
                         </a>
@@ -354,28 +340,6 @@ function getPasswordStrength(password) {
     if (/[^A-Za-z0-9]/.test(password)) strength++;
     
     return Math.min(strength, 4);
-}
-
-function resendVerification() {
-    fetch('{{ url_for("auth.resend_verification") }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token() }}'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Verification email sent successfully!');
-        } else {
-            alert('Error sending verification email: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error sending verification email');
-    });
 }
 </script>
 {% endblock %}

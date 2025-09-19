@@ -14,13 +14,13 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String(20), default='user')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    is_verified = db.Column(db.Boolean, default=False, nullable=False)
-    verification_token = db.Column(db.String(100), unique=True, nullable=True)
     
-    # Convenience property for email verification
-    @property
-    def email_verified(self):
-        return self.is_verified
+    # Profile fields
+    first_name = db.Column(db.String(50), nullable=True)
+    last_name = db.Column(db.String(50), nullable=True)
+    bio = db.Column(db.Text, nullable=True)
+    timezone = db.Column(db.String(50), nullable=True)
+    language = db.Column(db.String(10), nullable=True)
     
     # Relationships
     files = db.relationship('File', backref='owner', lazy='dynamic', cascade='all, delete-orphan')
@@ -41,29 +41,6 @@ class User(db.Model, UserMixin):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
-    def generate_verification_token(self):
-        """Generate a verification token for email verification"""
-        from flask import current_app
-        import secrets
-        
-        # Generate a secure random token
-        token = secrets.token_urlsafe(32)
-        self.verification_token = token
-        return token
-    
-    def verify_email_token(self, token):
-        """Verify the email verification token"""
-        if self.verification_token == token:
-            self.is_verified = True
-            self.verification_token = None  # Clear the token after verification
-            return True
-        return False
-    
-    @staticmethod
-    def verify_token_and_get_user(token):
-        """Get user by verification token"""
-        return User.query.filter_by(verification_token=token).first()
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.role}')"

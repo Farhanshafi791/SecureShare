@@ -1,12 +1,10 @@
 from flask import Flask, session, request, g
 from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
-from flask_mail import Mail
 from config import Config
 from datetime import datetime, timedelta
 
 # Initialize extensions
-mail = Mail()
 
 # Import models and db
 from app.models import db
@@ -26,7 +24,6 @@ def create_app(config_class=Config):
     from app.models import User
     db.init_app(app)
     bcrypt = Bcrypt(app)
-    mail.init_app(app)
     
     # Initialize Flask-Login
     login_manager = LoginManager(app)

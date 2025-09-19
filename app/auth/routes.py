@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, current_user, logout_user, login_required
 from urllib.parse import urlparse, urljoin
 from app.models import db, User
-from app.utils.email_utils import send_verification_email, send_welcome_email
 from app.utils.password_utils import check_password_strength
 import re
 
@@ -72,26 +71,7 @@ def register():
             db.session.add(new_user)
             db.session.commit()
             
-            # Check if email is configured
-            if not current_app.config.get('MAIL_USERNAME'):
-                # Email not configured - skip verification for development
-                new_user.is_verified = True
-                db.session.commit()
-                flash('Registration successful! Email verification is disabled in development mode. You can now log in.', 'success')
-                return redirect(url_for('auth.login'))
-            
-            # Send verification email
-            if send_verification_email(new_user):
-                db.session.commit()
-                flash('Registration successful! Please check your email to verify your account before logging in.', 'success')
-            else:
-                # Email sending failed - provide helpful error message
-                flash('Registration successful, but failed to send verification email. Please contact the administrator to enable email functionality.', 'warning')
-                # For now, auto-verify the user so they can still use the system
-                new_user.is_verified = True
-                db.session.commit()
-            
-            # Redirect to login
+            flash('Registration successful! You can now log in.', 'success')
             return redirect(url_for('auth.login'))
             
         except Exception as e:
@@ -124,11 +104,6 @@ def login():
             user = User.query.filter_by(username=email_or_username).first()
             
         if user and user.verify_password(password):
-            # Check if email is verified
-            if not user.is_verified:
-                flash('Please verify your email address before logging in. Check your inbox for the verification link.', 'warning')
-                return render_template('auth/login.html')
-            
             login_user(user, remember=True)
             
             # Get next page parameter
@@ -145,63 +120,6 @@ def login():
             flash('Invalid email/username or password.', 'danger')
     
     return render_template('auth/login.html')
-
-@auth.route('/verify-email/<token>')
-def verify_email(token):
-    """Verify email with token"""
-    user = User.verify_token_and_get_user(token)
-    
-    if not user:
-        flash('Invalid or expired verification link.', 'danger')
-        return redirect(url_for('auth.login'))
-    
-    if user.is_verified:
-        flash('Email already verified. You can log in now.', 'info')
-        return redirect(url_for('auth.login'))
-    
-    # Verify the email
-    if user.verify_email_token(token):
-        db.session.commit()
-        
-        # Send welcome email
-        send_welcome_email(user)
-        
-        flash('Email verified successfully! You can now log in.', 'success')
-        return redirect(url_for('auth.login'))
-    else:
-        flash('Invalid verification token.', 'danger')
-        return redirect(url_for('auth.login'))
-
-@auth.route('/resend-verification', methods=['GET', 'POST'])
-def resend_verification():
-    """Resend verification email"""
-    if request.method == 'POST':
-        email = request.form.get('email')
-        
-        if not email:
-            flash('Email address is required.', 'danger')
-            return render_template('auth/resend_verification.html')
-        
-        user = User.query.filter_by(email=email).first()
-        
-        if not user:
-            flash('No account found with that email address.', 'danger')
-            return render_template('auth/resend_verification.html')
-        
-        if user.is_verified:
-            flash('Email is already verified. You can log in now.', 'info')
-            return redirect(url_for('auth.login'))
-        
-        # Send new verification email
-        if send_verification_email(user):
-            db.session.commit()
-            flash('Verification email sent! Please check your inbox.', 'success')
-        else:
-            flash('Failed to send verification email. Please try again later.', 'danger')
-        
-        return render_template('auth/resend_verification.html')
-    
-    return render_template('auth/resend_verification.html')
 
 @auth.route('/logout')
 @login_required

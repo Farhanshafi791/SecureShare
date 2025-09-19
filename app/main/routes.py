@@ -466,6 +466,11 @@ def update_profile():
             # Update user information
             current_user.username = form.username.data
             current_user.email = form.email.data
+            current_user.first_name = form.first_name.data
+            current_user.last_name = form.last_name.data
+            current_user.bio = form.bio.data
+            current_user.timezone = form.timezone.data
+            current_user.language = form.language.data
             
             db.session.commit()
             flash('Profile updated successfully!', 'success')

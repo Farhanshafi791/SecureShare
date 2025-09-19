@@ -32,11 +32,3 @@ class Config:
     
     # Encryption settings
     ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY') or 'your-encryption-key-here-change-this'
-    
-    # Email settings
-    MAIL_SERVER = os.environ.get('MAIL_SERVER') or 'smtp.gmail.com'
-    MAIL_PORT = int(os.environ.get('MAIL_PORT') or 587)
-    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'true').lower() in ['true', 'on', '1']
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')  # Your Gmail address
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')  # Your Gmail app password
-    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER') or os.environ.get('MAIL_USERNAME')
