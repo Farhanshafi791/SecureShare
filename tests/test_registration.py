@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Debug script to test registration functionality and identify issues
+Script to test registration functionality and identify issues
 """
 
 import os

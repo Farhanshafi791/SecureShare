@@ -3,9 +3,9 @@
 Database viewer script to see all users in the SecureShare database
 """
 
-import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+import sys
+sys.path.append('.')
 
 from app import create_app
 from app.models import db, User

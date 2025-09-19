@@ -5,7 +5,7 @@ Test script to verify the Flask app can start successfully
 
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append('.')
 
 from app import create_app
 

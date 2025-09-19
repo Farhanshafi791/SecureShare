@@ -8,8 +8,7 @@ import os
 import tempfile
 import io
 
-# Add the parent directory to Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append('.')
 
 from app import create_app
 from app.models import db, User, File, AccessLog

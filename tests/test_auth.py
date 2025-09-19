@@ -3,6 +3,9 @@ Authentication tests for SecureShare application
 """
 
 import pytest
+import sys
+sys.path.append('.')
+
 from app.models import User
 from app import db
 
