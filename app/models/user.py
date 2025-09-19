@@ -17,13 +17,6 @@ class User(db.Model, UserMixin):
     is_verified = db.Column(db.Boolean, default=False, nullable=False)
     verification_token = db.Column(db.String(100), unique=True, nullable=True)
     
-    # Profile fields
-    first_name = db.Column(db.String(50), nullable=True)
-    last_name = db.Column(db.String(50), nullable=True)
-    bio = db.Column(db.Text, nullable=True)
-    timezone = db.Column(db.String(50), default='UTC', nullable=True)
-    language = db.Column(db.String(10), default='en', nullable=True)
-    
     # Convenience property for email verification
     @property
     def email_verified(self):
