@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Render Build Script for SecureShare
 
 set -o errexit  # Exit on any error
@@ -16,15 +16,9 @@ mkdir -p uploads
 mkdir -p instance
 mkdir -p logs
 
-# Set proper permissions for directories
-echo "🔐 Setting directory permissions..."
-chmod 755 uploads
-chmod 755 instance  
-chmod 755 logs
-
 # Initialize database tables
 echo "🗄️ Initializing database..."
-python << EOF
+python << 'EOF'
 import os
 import sys
 
@@ -32,15 +26,13 @@ import sys
 if 'FLASK_ENV' not in os.environ:
     os.environ['FLASK_ENV'] = 'production'
 
-# Add the project root to Python path
-sys.path.insert(0, os.getcwd())
-
 try:
     from app import create_app
     from app.models import db
     
     print("Creating Flask application...")
-    app = create_app('production')
+    config_name = os.environ.get('FLASK_ENV', 'production')
+    app = create_app(config_name)
     
     with app.app_context():
         print("Creating database tables...")
@@ -75,13 +67,10 @@ try:
             
 except Exception as e:
     print(f"❌ Error during database initialization: {e}")
+    import traceback
+    traceback.print_exc()
     sys.exit(1)
 EOF
-
-# Clean up cache files
-echo "🧹 Cleaning up cache files..."
-find . -name "*.pyc" -delete
-find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
 
 echo "✅ Build completed successfully!"
 echo "🚀 Ready for deployment!"
