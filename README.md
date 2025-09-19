@@ -51,37 +51,105 @@ Documentation is now organized within each directory:
 - **`requirements.txt`** - Python dependencies and versions
 ## 🚀 Quick Start
 
-### 1. Clone and Setup
+### Local Development
+
+#### 1. Clone and Setup
 ```bash
 git clone https://github.com/Farhanshafi791/SecureShare.git
 cd SecureShare
 ```
 
-### 2. Install Dependencies
+#### 2. Environment Setup
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your configuration
+# - Set SECRET_KEY and ENCRYPTION_KEY
+# - Configure database URL (optional, defaults to SQLite)
+# - Set up email configuration (optional)
+```
+
+#### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Initialize Database
+#### 4. Initialize Database
 ```bash
 # See scripts/README.md for detailed script documentation
 python scripts/database/migrate_db.py
 ```
 
-### 4. Create Admin User
+#### 5. Create Admin User
 ```bash
 # See scripts/README.md for all admin utilities
 python scripts/admin/create_admin.py
 ```
 
-### 5. Run the Application
+#### 6. Run the Application
 ```bash
 python run.py
 ```
 
-### 6. Access the Application
+#### 7. Access the Application
 - **User Interface**: `http://localhost:5000`
 - **Admin Panel**: `http://localhost:5000/admin` (login as admin)
+
+### 🌐 Production Deployment
+
+#### Deploy to Render (Recommended)
+
+SecureShare is optimized for deployment on [Render](https://render.com) with PostgreSQL:
+
+1. **Quick Deploy**: See [`RENDER_DEPLOYMENT.md`](RENDER_DEPLOYMENT.md) for complete step-by-step instructions
+
+2. **One-Click Setup**:
+   - Push your code to GitHub
+   - Create PostgreSQL database on Render
+   - Create web service with these settings:
+     - **Build Command**: `./build.sh`
+     - **Start Command**: `gunicorn run:app`
+     - **Environment**: `FLASK_ENV=production`
+
+3. **Environment Variables**: Set these in Render dashboard:
+   ```env
+   FLASK_ENV=production
+   SECRET_KEY=<your-secret-key>
+   DATABASE_URL=<auto-provided-by-render>
+   ADMIN_EMAIL=admin@yourdomain.com
+   ADMIN_PASSWORD=secure-password
+   ```
+
+4. **Features Included**:
+   - ✅ Auto-scaling web service
+   - ✅ Managed PostgreSQL database
+   - ✅ Free SSL certificates
+   - ✅ Custom domain support
+   - ✅ Automatic deployments from Git
+   - ✅ 24/7 monitoring and logging
+
+#### Other Deployment Options
+
+**Docker**: 
+```bash
+# Build Docker image
+docker build -t secureshare .
+
+# Run with environment variables
+docker run -p 5000:5000 --env-file .env secureshare
+```
+
+**Heroku**:
+- Use same configuration as Render
+- Add Heroku Postgres addon
+- Set buildpack to Python
+
+**VPS/Cloud Server**:
+- Install Python 3.11+, PostgreSQL
+- Use systemd service or supervisord
+- Configure nginx reverse proxy
+- Set up SSL with Let's Encrypt
 
 ## 📖 Documentation
 

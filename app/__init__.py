@@ -2,7 +2,7 @@ from flask import Flask, session, request, g
 from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
-from config import Config
+from config import config
 from datetime import datetime, timedelta
 
 # Initialize extensions
@@ -17,10 +17,17 @@ from app.main.routes import main as main_blueprint
 from app.admin.routes import admin as admin_blueprint
 from app.support.routes import support as support_blueprint
 
-def create_app(config_class=Config):
+def create_app(config_name='default'):
     """Application factory pattern"""
     app = Flask(__name__)
+    
+    # Load configuration based on environment
+    config_class = config.get(config_name, config['default'])
     app.config.from_object(config_class)
+    
+    # Initialize the config class if it has an init_app method
+    if hasattr(config_class, 'init_app'):
+        config_class.init_app(app)
 
     # Initialize extensions
     from app.models import User
@@ -70,7 +77,7 @@ def create_app(config_class=Config):
             
             # Set warning flag if close to timeout
             time_left = app.config['PERMANENT_SESSION_LIFETIME'] - (current_time - last_activity)
-            g.session_warning = time_left <= app.config['SESSION_TIMEOUT_WARNING']
+            g.session_warning = time_left <= app.config.get('SESSION_TIMEOUT_WARNING', timedelta(minutes=5))
             g.time_left_minutes = int(time_left.total_seconds() / 60)
 
     # Register blueprints
