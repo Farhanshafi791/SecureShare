@@ -459,9 +459,9 @@
                             <i class="fas fa-user-circle me-1"></i>{{ current_user.username }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ url_for('main.dashboard') if 'main.dashboard' in url_for.__dict__ else '#' }}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.profile') }}"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.profile') }}"><i class="fas fa-cog me-2"></i>Settings</a></li>
                             {% if current_user.is_admin %}
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ url_for('admin.dashboard') }}"><i class="fas fa-crown me-2"></i>Admin Panel</a></li>

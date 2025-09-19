@@ -21,7 +21,12 @@ class Config:
     if DATABASE_URL and DATABASE_URL.startswith('postgres://'):
         DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
     
-    SQLALCHEMY_DATABASE_URI = DATABASE_URL or 'sqlite:///instance/site.db'
+    # Ensure instance directory exists for SQLite
+    instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance')
+    if not os.path.exists(instance_path):
+        os.makedirs(instance_path, exist_ok=True)
+    
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL or f'sqlite:///{os.path.join(instance_path, "site.db")}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
         'pool_pre_ping': True,  # Verify connections before use
@@ -35,6 +40,11 @@ class Config:
     
     # File upload configuration
     UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or os.path.join(os.getcwd(), 'uploads')
+    
+    # Ensure upload directory exists
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    
     MAX_CONTENT_LENGTH = int(os.environ.get('MAX_CONTENT_LENGTH', 50 * 1024 * 1024))  # 50MB default
     
     # Parse allowed extensions from environment or use defaults
@@ -69,7 +79,13 @@ class DevelopmentConfig(Config):
     """Development configuration."""
     DEBUG = True
     TESTING = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///instance/site.db'
+    
+    # Ensure instance directory exists for development
+    instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance')
+    if not os.path.exists(instance_path):
+        os.makedirs(instance_path, exist_ok=True)
+    
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f'sqlite:///{os.path.join(instance_path, "site.db")}'
 
 class ProductionConfig(Config):
     """Production configuration for Render deployment."""
