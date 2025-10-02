@@ -143,3 +143,8 @@ instance/*.db
 instance/*.db.backup
 uploads/
 *.key
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
